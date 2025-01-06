@@ -1,6 +1,8 @@
-﻿namespace PetHelp.Domain.AnimalManagement.VO;
+﻿using CSharpFunctionalExtensions;
 
-public record PetStatus
+namespace PetHelp.Domain.AnimalManagement.VO;
+
+public class PetStatus : ComparableValueObject
 {
     private static readonly PetStatus NeedsHelp = new(nameof(NeedsHelp));
     private static readonly PetStatus LookingForHome = new(nameof(LookingForHome));
@@ -15,5 +17,9 @@ public record PetStatus
     }
 
     public string? Value { get; }
-    
+
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Value;
+    }
 }

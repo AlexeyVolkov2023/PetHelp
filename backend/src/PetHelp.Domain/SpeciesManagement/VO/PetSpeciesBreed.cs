@@ -1,6 +1,8 @@
-﻿namespace PetHelp.Domain.SpeciesManagement.VO;
+﻿using CSharpFunctionalExtensions;
 
-public record PetSpeciesBreed
+namespace PetHelp.Domain.SpeciesManagement.VO;
+
+public class PetSpeciesBreed : ComparableValueObject
 {
     public PetSpeciesBreed(Guid speciesId, Guid breedId)
      {
@@ -10,5 +12,10 @@ public record PetSpeciesBreed
     
     public Guid SpeciesId { get; }
     public Guid BreedId { get; }
-    
+
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return SpeciesId;
+        yield return BreedId;
+    }
 }

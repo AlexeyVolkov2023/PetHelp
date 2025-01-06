@@ -15,8 +15,7 @@ public class Volunteer : Entity<Guid>
         int experienceInYears,
         string phoneNumber,
         List<SocialNetwork> socialNetworks,
-        List<PaymentDetails> paymentDetails,
-        List<Pet> ownedPets) : base(id)
+        List<PaymentDetails> paymentDetails) : base(id)
     {
         FullName = fullName;
         Email = email;
@@ -25,7 +24,6 @@ public class Volunteer : Entity<Guid>
         PhoneNumber = phoneNumber;
         SocialNetworks = socialNetworks;
         PaymentDetails = paymentDetails;
-        OwnedPets = ownedPets;
     }
 
     public string FullName { get; private set; }
@@ -33,13 +31,21 @@ public class Volunteer : Entity<Guid>
     public string Description { get; private set; }
     public int ExperienceInYears { get; private set; }
     public string PhoneNumber { get; private set; }
-    public List<SocialNetwork> SocialNetworks { get; private set; }
-    public List<PaymentDetails> PaymentDetails { get; private set; }
-    public List<Pet> OwnedPets { get; private set; }
+    public IReadOnlyCollection<SocialNetwork> SocialNetworks { get; private set; }
+    public IReadOnlyCollection<PaymentDetails> PaymentDetails { get; private set; }
+    public IReadOnlyCollection<Pet> OwnedPets { get; private set; }
     
 
     public int GetPetCountByStatus(string status)
     {
         return OwnedPets.Count(pet => pet.Status.Value == status);
+    }
+    
+    public void AddOwnedPet(Pet pet)
+    {
+        if(OwnedPets == null)
+            OwnedPets = new List<Pet>();
+            
+        ((List<Pet>)OwnedPets).Add(pet);
     }
 }

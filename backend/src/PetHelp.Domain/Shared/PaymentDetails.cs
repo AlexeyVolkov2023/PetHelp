@@ -1,6 +1,8 @@
-﻿namespace PetHelp.Domain.Shared;
+﻿using CSharpFunctionalExtensions;
 
-public record PaymentDetails
+namespace PetHelp.Domain.Shared;
+
+public class PaymentDetails : ComparableValueObject
 {
     public PaymentDetails(string title, string description)
     {
@@ -10,6 +12,9 @@ public record PaymentDetails
 
     public string Title { get; }
     public string Description { get; }
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Title;
+        yield return Description;
+    }
 }
-        
-   

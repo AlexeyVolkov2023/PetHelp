@@ -1,6 +1,8 @@
-﻿namespace PetHelp.Domain.AnimalManagement.VO;
+﻿using CSharpFunctionalExtensions;
 
-public record SocialNetwork
+namespace PetHelp.Domain.AnimalManagement.VO;
+
+public class SocialNetwork : ComparableValueObject
 {
     public SocialNetwork(string name, string link)
     {
@@ -10,4 +12,9 @@ public record SocialNetwork
 
     public string Name { get; }
     public string Link { get; }
+    protected override IEnumerable<IComparable> GetComparableEqualityComponents()
+    {
+        yield return Name;
+        yield return Link;
+    }
 }
