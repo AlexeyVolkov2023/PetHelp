@@ -4,7 +4,7 @@ namespace PetHelp.Domain.SpeciesManagement.VO;
 
 public class PetSpeciesBreed : ComparableValueObject
 {
-    public PetSpeciesBreed(Guid speciesId, Guid breedId)
+    private PetSpeciesBreed(Guid speciesId, Guid breedId)
      {
          SpeciesId = speciesId;
          BreedId = breedId;

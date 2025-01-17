@@ -1,29 +1,36 @@
 ﻿using CSharpFunctionalExtensions;
 using PetHelp.Domain.AnimalManagement.Entities;
+using PetHelp.Domain.AnimalManagement.ID;
 using PetHelp.Domain.AnimalManagement.VO;
 using PetHelp.Domain.Shared;
 
 namespace PetHelp.Domain.AnimalManagement.AggregateRoot;
 
-public class Volunteer : Entity<Guid>
+public class Volunteer : Entity<VolunteerId>
 {
-    public Volunteer(
-        Guid id,
+    private List<Pet> _pets = [];
+
+    private Volunteer(VolunteerId id) : base(id)
+    {
+      
+    }
+    private Volunteer(
+        VolunteerId id,
         string fullName,
         string email,
         string description,
         int experienceInYears,
         string phoneNumber,
-        List<SocialNetwork> socialNetworks,
-        List<PaymentDetails> paymentDetails) : base(id)
+        IEnumerable<PaymentDetail>? details,
+        IEnumerable<SocialNetwork>? networks) : base(id)
     {
         FullName = fullName;
         Email = email;
         Description = description;
         ExperienceInYears = experienceInYears;
         PhoneNumber = phoneNumber;
-        SocialNetworks = socialNetworks;
-        PaymentDetails = paymentDetails;
+        Details = details?.ToList() ?? [];
+        Networks = networks?.ToList() ?? [];
     }
 
     public string FullName { get; private set; }
@@ -31,21 +38,17 @@ public class Volunteer : Entity<Guid>
     public string Description { get; private set; }
     public int ExperienceInYears { get; private set; }
     public string PhoneNumber { get; private set; }
-    public IReadOnlyCollection<SocialNetwork> SocialNetworks { get; private set; }
-    public IReadOnlyCollection<PaymentDetails> PaymentDetails { get; private set; }
-    public IReadOnlyCollection<Pet> OwnedPets { get; private set; }
-    
+    public IReadOnlyList<SocialNetwork> Networks { get; private set; }
+    public IReadOnlyList<PaymentDetail> Details { get; private set; }
+    public IReadOnlyList<Pet> Pets => _pets;
 
     public int GetPetCountByStatus(string status)
     {
-        return OwnedPets.Count(pet => pet.Status.Value == status);
+        return Pets.Count(pet => pet.Status.Value == status);
     }
     
     public void AddOwnedPet(Pet pet)
     {
-        if(OwnedPets == null)
-            OwnedPets = new List<Pet>();
-            
-        ((List<Pet>)OwnedPets).Add(pet);
+        _pets.Add(pet);
     }
 }

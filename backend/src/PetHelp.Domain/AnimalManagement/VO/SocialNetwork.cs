@@ -4,7 +4,7 @@ namespace PetHelp.Domain.AnimalManagement.VO;
 
 public class SocialNetwork : ComparableValueObject
 {
-    public SocialNetwork(string name, string link)
+    private SocialNetwork(string name, string link)
     {
         Name = name;
         Link = link;
