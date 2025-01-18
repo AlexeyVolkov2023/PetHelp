@@ -2,9 +2,9 @@
 
 namespace PetHelp.Domain.Shared;
 
-public class PaymentDetails : ComparableValueObject
+public class PaymentDetail : ComparableValueObject
 {
-    public PaymentDetails(string title, string description)
+    private PaymentDetail(string title, string description)
     {
         Title = title;
         Description = description;
@@ -12,6 +12,7 @@ public class PaymentDetails : ComparableValueObject
 
     public string Title { get; }
     public string Description { get; }
+    
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
     {
         yield return Title;

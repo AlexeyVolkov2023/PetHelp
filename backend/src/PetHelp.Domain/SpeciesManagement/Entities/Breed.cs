@@ -1,11 +1,12 @@
 ﻿using CSharpFunctionalExtensions;
+using PetHelp.Domain.SpeciesManagement.ID;
 
 namespace PetHelp.Domain.SpeciesManagement.Entities;
 
-public class Breed : Entity<Guid>
+public class Breed : Entity<BreedId>
 {
-    public Breed(
-        Guid id,
+    private Breed(
+        BreedId id,
         string name) : base(id)
     {
         Name = name;
