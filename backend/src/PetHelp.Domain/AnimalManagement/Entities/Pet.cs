@@ -66,4 +66,84 @@ public class Pet : Entity<PetId>
     public IReadOnlyList<PaymentDetail> Details { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public PetSpeciesBreed SpeciesBreed { get; private set; }
+
+    public static Result<Pet, Error> Create(
+        PetId id, 
+        string name,
+        string description,
+        string color,
+        string healthInfo,
+        string address,
+        string ownerPhoneNumber,
+        PetStatus petStatus,
+        double height,
+        double weight,
+        bool isNeutered,
+        DateTime dateOfBirth,
+        bool isVaccinated,
+        PetSpeciesBreed speciesBreed,
+        IEnumerable<PaymentDetail>? details = null)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            return Errors.General.ValueIsInvalid("Name");
+        }
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            return Errors.General.ValueIsInvalid("Description");
+        }
+
+        if (string.IsNullOrWhiteSpace(color))
+        {
+            return Errors.General.ValueIsInvalid("Color");
+        }
+
+        if (string.IsNullOrWhiteSpace(healthInfo))
+        {
+            return Errors.General.ValueIsInvalid("HealthInfo");
+        }
+
+        if (string.IsNullOrWhiteSpace(address))
+        {
+            return Errors.General.ValueIsInvalid("Address");
+        }
+
+        if (string.IsNullOrWhiteSpace(ownerPhoneNumber))
+        {
+            return Errors.General.ValueIsInvalid("OwnerPhoneNumber");
+        }
+
+        if (height < 0)
+        {
+            return Errors.General.ValueIsRequired("Height");
+        }
+        
+        if (weight < 0)
+        {
+            return Errors.General.ValueIsRequired("Weight");
+        }
+        
+        if(dateOfBirth > DateTime.UtcNow)
+        {
+            return Errors.General.ValueIsRequired("DateOfBirth");
+        }
+            
+        return new Pet(
+            id,
+            name,
+            description,
+            color,
+            healthInfo,
+            address,
+            ownerPhoneNumber,
+            petStatus,
+            height,
+            weight,
+            isNeutered,
+            dateOfBirth,
+            isVaccinated,
+            speciesBreed,
+            details);
+    }
 }

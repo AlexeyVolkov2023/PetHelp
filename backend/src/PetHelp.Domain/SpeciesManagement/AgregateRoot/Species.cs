@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetHelp.Domain.Shared;
 using PetHelp.Domain.SpeciesManagement.Entities;
 using PetHelp.Domain.SpeciesManagement.ID;
 
@@ -22,4 +23,16 @@ public class Species : Entity<SpeciesId>
     public string Title { get;  } 
     public IReadOnlyList<Breed>? Breeds { get;  }  
    
+    public static Result<Species, Error> Create(
+        SpeciesId id,
+        string title,
+        IEnumerable<Breed>? breeds)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+        {
+            return Errors.General.ValueIsInvalid("Title");
+        } 
+
+        return new Species(id, title, breeds);
+    }
 }

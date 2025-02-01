@@ -1,4 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
+using PetHelp.Domain.Shared;
 
 namespace PetHelp.Domain.AnimalManagement.VO;
 
@@ -21,5 +22,17 @@ public class PetStatus : ComparableValueObject
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
     {
         yield return Value;
+    }
+
+    public static Result<PetStatus, Error> Create(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return Errors.General.ValueIsInvalid("Value");
+        }
+
+        var petStatus = new PetStatus(value);
+
+        return new PetStatus(value);
     }
 }
