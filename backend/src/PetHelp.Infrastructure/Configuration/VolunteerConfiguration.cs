@@ -22,25 +22,58 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 id => id.Value,
                 value => VolunteerId.Create(value));
 
-        builder.Property(v => v.FullName)
-            .HasMaxLength(Constants.FULL_NAME_MAX_LENGTH)
-            .IsRequired();
+        builder.ComplexProperty(v => v.FullName,
+            fb =>
+            {
+                fb.Property(f => f.Name)
+                    .HasMaxLength(Constants.NAME_MAX_LENGTH)
+                    .IsRequired(true)
+                    .HasColumnName("name");
+                fb.Property(f => f.Surname)
+                    .HasMaxLength(Constants.SURNAME_MAX_LENGTH)
+                    .IsRequired(true)
+                    .HasColumnName("surname");
+                fb.Property(f => f.Patronymic)
+                    .HasMaxLength(Constants.NAME_MAX_LENGTH)
+                    .IsRequired(false)
+                    .HasColumnName("patronymic");
+            });
 
-        builder.Property(v => v.Email)
-            .HasMaxLength(Constants.EMAIL_MAX_LENGTH)
-            .IsRequired();
+        builder.ComplexProperty(v => v.Email,
+            eb =>
+            {
+                eb.Property(e => e.Value)
+                    .HasMaxLength(Constants.EMAIL_MAX_LENGTH)
+                    .IsRequired(true)
+                    .HasColumnName("email");
+            });
 
-        builder.Property(v => v.Description)
-            .HasMaxLength(Constants.DESCRIPTION_MAX_LENGTH)
-            .IsRequired();
+        builder.ComplexProperty(v => v.Description,
+            db =>
+            {
+                db.Property(e => e.Value)
+                    .HasMaxLength(Constants.DESCRIPTION_MAX_LENGTH)
+                    .IsRequired(true)
+                    .HasColumnName("description");
+            });
 
-        builder.Property(v => v.ExperienceInYears)
-            .HasMaxLength(Constants.EXPERIENCE_YEARS_MAX_VALUE)
-            .IsRequired();
+        builder.ComplexProperty(v => v.ExperienceInYears,
+            eb =>
+            {
+                eb.Property(e => e.Value)
+                    .HasMaxLength(Constants.EXPERIENCE_YEARS_MAX_VALUE)
+                    .IsRequired(true)
+                    .HasColumnName("experience_in_years");
+            });
 
-        builder.Property(v => v.PhoneNumber)
-            .HasMaxLength(Constants.PHONE_NUMBER_MAX_LENGTH)
-            .IsRequired();
+        builder.ComplexProperty(v => v.PhoneNumber,
+            pb =>
+            {
+                pb.Property(n => n.Value)
+                    .HasMaxLength(Constants.PHONE_NUMBER_MAX_LENGTH)
+                    .IsRequired(true)
+                    .HasColumnName("phone_number");
+            });
 
         builder.Property(v => v.Details)
             .HasConversion(
@@ -49,7 +82,8 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 new ValueComparer<IReadOnlyList<PaymentDetail>>(
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                    c => c.ToList()));
+                    c => c.ToList()))
+            .HasColumnName("payment_details");
 
         builder.Property(v => v.Networks)
             .HasConversion(
@@ -58,14 +92,15 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                 new ValueComparer<IReadOnlyList<SocialNetwork>>(
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                    c => c.ToList()));
-        
+                    c => c.ToList()))
+            .HasColumnName("social+networks");
+
         builder.HasMany(v => v.Pets)
             .WithOne(p => p.Volunteer)
             .HasForeignKey("volunteer_id")
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
-        
+
         builder.Navigation(v => v.Pets)
             .AutoInclude();
     }
