@@ -41,13 +41,15 @@ namespace PetHelp.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    experience_in_years = table.Column<int>(type: "integer", maxLength: 100, nullable: false),
-                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     networks = table.Column<string>(type: "text", nullable: false),
-                    details = table.Column<string>(type: "text", nullable: false)
+                    details = table.Column<string>(type: "text", nullable: false),
+                    description_value = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    email_value = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    experience_in_years_value = table.Column<int>(type: "integer", maxLength: 100, nullable: false),
+                    full_name_name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    full_name_patronymic = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
+                    full_name_surname = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    phone_number_value = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {

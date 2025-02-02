@@ -8,7 +8,7 @@ namespace PetHelp.Domain.AnimalManagement.AggregateRoot;
 
 public class Volunteer : Entity<VolunteerId>
 {
-    private List<Pet> _pets = [];
+    private readonly List<Pet> _pets = [];
 
     private Volunteer(VolunteerId id) : base(id)
     {
@@ -16,11 +16,11 @@ public class Volunteer : Entity<VolunteerId>
 
     public Volunteer(
         VolunteerId id,
-        string fullName,
-        string email,
-        string description,
-        int experienceInYears,
-        string phoneNumber,
+        FullName fullName,
+        Email email,
+        Description description,
+        ExperienceInYears experienceInYears,
+        PhoneNumber phoneNumber,
         IEnumerable<PaymentDetail>? details,
         IEnumerable<SocialNetwork>? networks) : base(id)
     {
@@ -33,11 +33,11 @@ public class Volunteer : Entity<VolunteerId>
         Networks = networks?.ToList() ?? [];
     }
 
-    public string FullName { get; private set; }
-    public string Email { get; private set; }
-    public string Description { get; private set; }
-    public int ExperienceInYears { get; private set; }
-    public string PhoneNumber { get; private set; }
+    public FullName FullName { get; private set; }
+    public Email Email { get; private set; }
+    public Description Description { get; private set; }
+    public ExperienceInYears ExperienceInYears { get; private set; }
+    public PhoneNumber PhoneNumber { get; private set; }
     public IReadOnlyList<SocialNetwork> Networks { get; private set; }
     public IReadOnlyList<PaymentDetail> Details { get; private set; }
     public IReadOnlyList<Pet> Pets => _pets;
@@ -54,39 +54,14 @@ public class Volunteer : Entity<VolunteerId>
 
     public static Result<Volunteer, Error> Create(
         VolunteerId id,
-        string fullName,
-        string email,
-        string description,
-        int experienceInYears,
-        string phoneNumber,
+        FullName fullName,
+        Email email,
+        Description description,
+        ExperienceInYears experienceInYears,
+        PhoneNumber phoneNumber,
         IEnumerable<SocialNetwork> networks,
         IEnumerable<PaymentDetail> details)
     {
-        if (string.IsNullOrWhiteSpace(fullName))
-        {
-            return Errors.General.ValueIsInvalid("FullName");
-        }
-
-        if (string.IsNullOrWhiteSpace(email))
-        {
-            return Errors.General.ValueIsInvalid("Email");
-        }
-
-        if (string.IsNullOrWhiteSpace(description))
-        {
-            return Errors.General.ValueIsInvalid("Description");
-        }
-
-        if (experienceInYears < 0)
-        {
-            return Errors.General.ValueIsRequired("ExperienceInYears");
-        }
-
-        if (string.IsNullOrWhiteSpace(phoneNumber))
-        {
-            return Errors.General.ValueIsInvalid("PhoneNumber");
-        }
-
         return new Volunteer(
             id,
             fullName,

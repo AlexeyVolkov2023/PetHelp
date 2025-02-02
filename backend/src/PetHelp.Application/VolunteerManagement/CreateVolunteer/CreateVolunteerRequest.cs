@@ -1,7 +1,7 @@
 ﻿namespace PetHelp.Application.VolunteerManagement.CreateVolunteer;
 
 public record CreateVolunteerRequest(
-    string FullName,
+    FullNameFto FullName,
     string Email,
     string Description,
     int ExperienceInYears,
@@ -9,5 +9,5 @@ public record CreateVolunteerRequest(
     IEnumerable<CreatePaymentDetail> Details,
     IEnumerable<CreateSocialNetwork> Networks);
 public record CreateSocialNetwork(string Name, string Link);
-public record CreatePaymentDetail (string Title, string Description);
-    
+public record CreatePaymentDetail(string Title, string Description);
+public record FullNameFto(string Name, string Surname, string? Patronymik);

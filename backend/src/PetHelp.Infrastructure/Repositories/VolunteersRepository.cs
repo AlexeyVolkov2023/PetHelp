@@ -43,7 +43,7 @@ public class VolunteersRepository(ApplicationDbContext dbContext) : IVolunteersR
     {
         var volunteer = await dbContext.Volunteers
             .Include(v => v.Pets)
-            .FirstOrDefaultAsync(v => v.PhoneNumber == requestPhoneNumber, cancellationToken);
+            .FirstOrDefaultAsync(v => v.PhoneNumber.Value == requestPhoneNumber , cancellationToken);
        
         if (volunteer is null)
         {
