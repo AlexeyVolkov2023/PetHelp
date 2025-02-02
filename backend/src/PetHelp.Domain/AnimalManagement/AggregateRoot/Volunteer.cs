@@ -12,9 +12,9 @@ public class Volunteer : Entity<VolunteerId>
 
     private Volunteer(VolunteerId id) : base(id)
     {
-      
     }
-    private Volunteer(
+
+    public Volunteer(
         VolunteerId id,
         string fullName,
         string email,
@@ -46,9 +46,55 @@ public class Volunteer : Entity<VolunteerId>
     {
         return Pets.Count(pet => pet.Status.Value == status);
     }
-    
+
     public void AddOwnedPet(Pet pet)
     {
         _pets.Add(pet);
+    }
+
+    public static Result<Volunteer, Error> Create(
+        VolunteerId id,
+        string fullName,
+        string email,
+        string description,
+        int experienceInYears,
+        string phoneNumber,
+        IEnumerable<SocialNetwork> networks,
+        IEnumerable<PaymentDetail> details)
+    {
+        if (string.IsNullOrWhiteSpace(fullName))
+        {
+            return Errors.General.ValueIsInvalid("FullName");
+        }
+
+        if (string.IsNullOrWhiteSpace(email))
+        {
+            return Errors.General.ValueIsInvalid("Email");
+        }
+
+        if (string.IsNullOrWhiteSpace(description))
+        {
+            return Errors.General.ValueIsInvalid("Description");
+        }
+
+        if (experienceInYears < 0)
+        {
+            return Errors.General.ValueIsRequired("ExperienceInYears");
+        }
+
+        if (string.IsNullOrWhiteSpace(phoneNumber))
+        {
+            return Errors.General.ValueIsInvalid("PhoneNumber");
+        }
+
+        return new Volunteer(
+            id,
+            fullName,
+            email,
+            description,
+            experienceInYears,
+            phoneNumber,
+            details,
+            networks);
     }
 }

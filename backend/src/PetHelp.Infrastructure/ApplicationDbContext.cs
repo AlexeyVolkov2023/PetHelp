@@ -8,7 +8,7 @@ namespace PetHelp.Infrastructure;
 
 public class ApplicationDbContext(IConfiguration configuration) : DbContext
 {
-    private const string DATABASE = "Database";
+    private const string DATABASE = "Database"; 
 
     public DbSet<Volunteer> Volunteers => Set<Volunteer>();
     public DbSet<Species> Specieses => Set<Species>();
