@@ -16,12 +16,12 @@ public class CreateVolunteerHandler
     }
 
     public async Task<Result<Guid, Error>> Handler(
-        CreateVolunteerRequest request,
+        CreateVolunteerCommand command,
         CancellationToken cancellationToken = default)
     {
         var volunteerId = VolunteerId.NewVolunteerId();
         
-        var volunteer = await _volunteersRepository.GetByNumber(request.PhoneNumber, cancellationToken);
+        var volunteer = await _volunteersRepository.GetByNumber(command.PhoneNumber, cancellationToken);
 
         if (volunteer.IsSuccess)
         {
@@ -29,33 +29,33 @@ public class CreateVolunteerHandler
         }
         
         var fullNameResult =
-            FullName.Create(request.FullName.Name,
-                            request.FullName.Surname,
-                            request.FullName.Patronymik!);
+            FullName.Create(command.Name,
+                            command.Surname,
+                            command.Patronymik!);
         if (fullNameResult.IsFailure)
             return fullNameResult.Error;
         
-        var emailResult = Email.Create(request.Email);
+        var emailResult = Email.Create(command.Email);
         if (emailResult.IsFailure)
             return emailResult.Error;
         
-        var descriptionResult = Description.Create(request.Description);
+        var descriptionResult = Description.Create(command.Description);
         if (descriptionResult.IsFailure)
             return descriptionResult.Error;
         
-        var experienceInYearsResult = ExperienceInYears.Create(request.ExperienceInYears);
+        var experienceInYearsResult = ExperienceInYears.Create(command.ExperienceInYears);
         if (experienceInYearsResult.IsFailure)
             return experienceInYearsResult.Error;
         
-        var phoneNumberResult = PhoneNumber.Create(request.PhoneNumber);
+        var phoneNumberResult = PhoneNumber.Create(command.PhoneNumber);
         if (phoneNumberResult.IsFailure)
             return phoneNumberResult.Error;
 
-        var detailsResult = request.Details?
+        var detailsResult = command.Details?
             .Select(d => PaymentDetail.Create(d.Title, d.Description).Value)
             .ToList();
 
-        var networksResult = request.Networks?
+        var networksResult = command.Networks?
             .Select(n => SocialNetwork.Create(n.Name, n.Link).Value)
             .ToList();
 
