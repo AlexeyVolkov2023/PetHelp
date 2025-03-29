@@ -141,5 +141,6 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
             .IsRequired(true)
             .HasColumnName("created_at");
+   
     }
 }

@@ -3,13 +3,10 @@
 namespace PetHelp.Application.VolunteerManagement.CreateVolunteer;
 
 public record CreateVolunteerCommand(
-    string Name,
-    string Surname,
-    string? Patronymik,
+    CreateFullNameDtos FullNameDto,
     string Email,
     string Description,
     int ExperienceInYears,
     string PhoneNumber,
     IEnumerable<CreatePaymentDetail> Details,
     IEnumerable<CreateSocialNetwork> Networks);
-
