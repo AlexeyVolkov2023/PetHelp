@@ -1,4 +1,5 @@
 ﻿using PetHelp.Application.Dtos;
+using PetHelp.Application.VolunteerManagement.CreateVolunteer;
 
 namespace PetHelp.API.Controllers.Volunteer.Requests;
 
@@ -11,4 +12,15 @@ public record CreateVolunteerRequest(
     int ExperienceInYears,
     string PhoneNumber,
     IEnumerable<CreatePaymentDetail> Details,
-    IEnumerable<CreateSocialNetwork> Networks);
+    IEnumerable<CreateSocialNetwork> Networks)
+{
+    public CreateVolunteerCommand ToCommand() =>
+        new (
+            new CreateFullNameDtos(Name, Surname, Patronymik),
+            Email,
+            Description,
+            ExperienceInYears,
+            PhoneNumber,
+            Details,
+            Networks);
+} 

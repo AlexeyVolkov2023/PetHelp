@@ -1,4 +1,7 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Security.Cryptography.Xml;
+using CSharpFunctionalExtensions;
+using FluentValidation;
+using PetHelp.Application.Extensions;
 using PetHelp.Domain.AnimalManagement.AggregateRoot;
 using PetHelp.Domain.AnimalManagement.ID;
 using PetHelp.Domain.AnimalManagement.VO;
@@ -9,65 +12,65 @@ namespace PetHelp.Application.VolunteerManagement.CreateVolunteer;
 public class CreateVolunteerHandler
 {
     private readonly IVolunteersRepository _volunteersRepository;
+    private readonly IValidator<CreateVolunteerCommand> _validator;
 
-    public CreateVolunteerHandler(IVolunteersRepository volunteersRepository)
+    public CreateVolunteerHandler(
+        IVolunteersRepository volunteersRepository,
+        IValidator<CreateVolunteerCommand> validator)
     {
         _volunteersRepository = volunteersRepository;
+        _validator = validator;
     }
 
-    public async Task<Result<Guid, Error>> Handler(
+    public async Task<Result<Guid, ErrorList>> Handler(
         CreateVolunteerCommand command,
         CancellationToken cancellationToken = default)
     {
-        var volunteerId = VolunteerId.NewVolunteerId();
-        
-        var volunteer = await _volunteersRepository.GetByNumber(command.PhoneNumber, cancellationToken);
 
-        if (volunteer.IsSuccess)
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+        if (validationResult.IsValid == false)
         {
-            return Errors.Volunteer.AlreadyExist();
+            return validationResult.ToErrorList();
         }
-        
-        var fullNameResult =
-            FullName.Create(command.Name,
-                            command.Surname,
-                            command.Patronymik!);
-        if (fullNameResult.IsFailure)
-            return fullNameResult.Error;
-        
-        var emailResult = Email.Create(command.Email);
-        if (emailResult.IsFailure)
-            return emailResult.Error;
-        
-        var descriptionResult = Description.Create(command.Description);
-        if (descriptionResult.IsFailure)
-            return descriptionResult.Error;
-        
-        var experienceInYearsResult = ExperienceInYears.Create(command.ExperienceInYears);
-        if (experienceInYearsResult.IsFailure)
-            return experienceInYearsResult.Error;
-        
-        var phoneNumberResult = PhoneNumber.Create(command.PhoneNumber);
-        if (phoneNumberResult.IsFailure)
-            return phoneNumberResult.Error;
+     
+        var volunteerId = VolunteerId.NewVolunteerId();
 
-        var detailsResult = command.Details?
+        var volunteerResult = await _volunteersRepository.GetByNumber(command.PhoneNumber, cancellationToken);
+        if (volunteerResult.IsSuccess)//здесь нужен сакцэсс потому что при нахождении волонтера по номеру, должна выкинутся ошибка что запись под таким номером уже есть
+        {
+            return Result.Failure<Guid, ErrorList>(Errors.Volunteer.AlreadyExist());
+        }
+
+        var fullName = FullName.Create(
+            command.FullNameDto.Name,
+            command.FullNameDto.Surname,
+            command.FullNameDto.Patronymik!).Value;
+
+        var email = Email.Create(command.Email).Value;
+
+        var description = Description.Create(command.Description).Value;
+
+        var experienceInYears = ExperienceInYears.Create(command.ExperienceInYears).Value;
+
+        var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
+
+        var details = command.Details?
             .Select(d => PaymentDetail.Create(d.Title, d.Description).Value)
             .ToList();
 
-        var networksResult = command.Networks?
+        var networks = command.Networks?
             .Select(n => SocialNetwork.Create(n.Name, n.Link).Value)
             .ToList();
 
         var volunteerToCreate = new Volunteer(
             volunteerId,
-            fullNameResult.Value,
-            emailResult.Value,
-            descriptionResult.Value,
-            experienceInYearsResult.Value,
-            phoneNumberResult.Value,
-            detailsResult,
-            networksResult);
+            fullName,
+            email,
+            description,
+            experienceInYears,
+            phoneNumber,
+            details,
+            networks);
 
         await _volunteersRepository.Add(volunteerToCreate, cancellationToken);
 
