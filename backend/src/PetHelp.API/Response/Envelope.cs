@@ -1,7 +1,6 @@
 ﻿using PetHelp.Domain.Shared;
 
 namespace PetHelp.API.Response;
-public record ResponseError(string? ErrorCode, string? ErrorMessage, string? InvalidField);
 
 public record Envelope
 {
