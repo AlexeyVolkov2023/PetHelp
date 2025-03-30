@@ -1,6 +1,7 @@
 ﻿using System.Security.Cryptography.Xml;
 using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.Extensions.Logging;
 using PetHelp.Application.Extensions;
 using PetHelp.Domain.AnimalManagement.AggregateRoot;
 using PetHelp.Domain.AnimalManagement.ID;
@@ -13,13 +14,16 @@ public class CreateVolunteerHandler
 {
     private readonly IVolunteersRepository _volunteersRepository;
     private readonly IValidator<CreateVolunteerCommand> _validator;
+    private readonly ILogger<CreateVolunteerHandler> _logger;
 
     public CreateVolunteerHandler(
         IVolunteersRepository volunteersRepository,
-        IValidator<CreateVolunteerCommand> validator)
+        IValidator<CreateVolunteerCommand> validator,
+        ILogger<CreateVolunteerHandler> logger)
     {
         _volunteersRepository = volunteersRepository;
         _validator = validator;
+        _logger = logger;
     }
 
     public async Task<Result<Guid, ErrorList>> Handler(
@@ -36,7 +40,7 @@ public class CreateVolunteerHandler
         var volunteerId = VolunteerId.NewVolunteerId();
 
         var volunteerResult = await _volunteersRepository.GetByNumber(command.PhoneNumber, cancellationToken);
-        if (volunteerResult.IsSuccess)//здесь нужен сакцэсс потому что при нахождении волонтера по номеру, должна выкинутся ошибка что запись под таким номером уже есть
+        if (volunteerResult.IsSuccess)
         {
             return Result.Failure<Guid, ErrorList>(Errors.Volunteer.AlreadyExist());
         }
@@ -73,6 +77,8 @@ public class CreateVolunteerHandler
             networks);
 
         await _volunteersRepository.Add(volunteerToCreate, cancellationToken);
+        
+        _logger.LogInformation("Created volunteer with Id {volunteerId}", volunteerId);
 
         return volunteerToCreate.Id.Value;
     }
