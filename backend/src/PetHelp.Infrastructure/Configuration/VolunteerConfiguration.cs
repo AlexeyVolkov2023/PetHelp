@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text.Encodings.Web;
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -75,17 +76,21 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                     .HasColumnName("phone_number");
             });
 
-        builder.Property(v => v.Details)
+        builder.Property(v => v.PaymentDetails)
             .HasConversion(
-                details => JsonSerializer.Serialize(details, JsonSerializerOptions.Default),
-                json => JsonSerializer.Deserialize<IReadOnlyList<PaymentDetail>>(json, JsonSerializerOptions.Default)!,
+                details => JsonSerializer.Serialize(
+                    details,
+                    JsonSerializerOptions.Default),
+                json => JsonSerializer.Deserialize<IReadOnlyList<PaymentDetail>>(
+                    json,
+                    JsonSerializerOptions.Default)!,
                 new ValueComparer<IReadOnlyList<PaymentDetail>>(
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                     c => c.ToList()))
             .HasColumnName("payment_details");
-
-        builder.Property(v => v.Networks)
+        
+       builder.Property(v => v.SocialNetworks)
             .HasConversion(
                 networks => JsonSerializer.Serialize(networks, JsonSerializerOptions.Default),
                 json => JsonSerializer.Deserialize<IReadOnlyList<SocialNetwork>>(json, JsonSerializerOptions.Default)!,
@@ -93,13 +98,17 @@ public class VolunteerConfiguration : IEntityTypeConfiguration<Volunteer>
                     (c1, c2) => c1.SequenceEqual(c2),
                     c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
                     c => c.ToList()))
-            .HasColumnName("social+networks");
+            .HasColumnName("social_networks");
 
         builder.HasMany(v => v.Pets)
             .WithOne(p => p.Volunteer)
             .HasForeignKey("volunteer_id")
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
+        
+        builder.Property<bool>("_isDeleted")
+            .UsePropertyAccessMode(PropertyAccessMode.Field)
+            .HasColumnName("is_deleted");
 
         builder.Navigation(v => v.Pets)
             .AutoInclude();

@@ -7,9 +7,10 @@ using PetHelp.Domain.SpeciesManagement.VO;
 
 namespace PetHelp.Domain.AnimalManagement.Entities;
 
-public class Pet : Entity<PetId>
+public class Pet : Entity<PetId>, ISoftDeletable
 {
     public Volunteer Volunteer { get; private set; } = null!;
+    private bool _isDeleted = false;
 
     public Pet(PetId id) : base(id)
     {
@@ -73,5 +74,17 @@ public class Pet : Entity<PetId>
             dateOfBirth,
             speciesBreed,
             details);
+    }
+    
+    public void SoftDelete()
+    {
+        if (_isDeleted == false)
+            _isDeleted = true;
+    }
+
+    public void Restore()
+    {
+        if (_isDeleted)
+            _isDeleted = false;
     }
 }

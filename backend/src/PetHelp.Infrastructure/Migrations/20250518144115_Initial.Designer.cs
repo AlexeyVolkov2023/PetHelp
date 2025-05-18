@@ -13,8 +13,8 @@ using PetHelp.Infrastructure;
 namespace PetHelp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250201183642_Initia3")]
-    partial class Initia3
+    [Migration("20250518144115_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,15 +32,19 @@ namespace PetHelp.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Details")
+                    b.Property<string>("PaymentDetails")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("payment_details");
 
-                    b.Property<string>("Networks")
+                    b.Property<string>("SocialNetworks")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("social+networks");
+                        .HasColumnName("social_networks");
+
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetHelp.Domain.AnimalManagement.AggregateRoot.Volunteer.Description#Description", b1 =>
                         {

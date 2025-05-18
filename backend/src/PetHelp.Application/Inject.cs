@@ -1,6 +1,12 @@
 ﻿using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-using PetHelp.Application.VolunteerManagement.CreateVolunteer;
+using PetHelp.Application.VolunteerManagement.Create;
+using PetHelp.Application.VolunteerManagement.Delete.Hard;
+using PetHelp.Application.VolunteerManagement.Delete.Soft;
+using PetHelp.Application.VolunteerManagement.UpdateMainInfo;
+using PetHelp.Application.VolunteerManagement.UpdatePaymentDetail;
+using PetHelp.Application.VolunteerManagement.UpdateSocialNetwork;
+
 
 namespace PetHelp.Application;
 
@@ -8,7 +14,12 @@ public static class Inject
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<CreateVolunteerHandler>();
+        services.AddScoped<CreateHandler>();
+        services.AddScoped<UpdateMainInfoHandler>();
+        services.AddScoped<UpdatePaymentDetailHandler>();
+        services.AddScoped<SoftDeleteHandler>();
+        services.AddScoped<HardDeleteHandler>();
+        services.AddScoped<UpdateSocialNetworkHandler>();
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
 

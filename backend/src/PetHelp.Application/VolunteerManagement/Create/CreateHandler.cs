@@ -1,0 +1,79 @@
+﻿using CSharpFunctionalExtensions;
+using FluentValidation;
+using Microsoft.Extensions.Logging;
+using PetHelp.Application.Extensions;
+using PetHelp.Domain.AnimalManagement.ID;
+using PetHelp.Domain.AnimalManagement.VO;
+using PetHelp.Domain.Shared;
+
+namespace PetHelp.Application.VolunteerManagement.Create;
+
+public class CreateHandler
+{
+    private readonly IVolunteersRepository _volunteersRepository;
+    private readonly IValidator<CreateCommand> _validator;
+    private readonly ILogger<CreateHandler> _logger;
+
+    public CreateHandler(
+        IVolunteersRepository volunteersRepository,
+        IValidator<CreateCommand> validator,
+        ILogger<CreateHandler> logger)
+    {
+        _volunteersRepository = volunteersRepository;
+        _validator = validator;
+        _logger = logger;
+    }
+
+    public async Task<Result<Guid, ErrorList>> Handle(
+        CreateCommand command,
+        CancellationToken cancellationToken = default)
+    {
+        var validationResult = await _validator.ValidateAsync(command, cancellationToken);
+        if (validationResult.IsValid == false)
+            return validationResult.ToErrorList();
+        
+        var fullName = FullName.Create(
+            command.FullNameDto.Name,
+            command.FullNameDto.Surname,
+            command.FullNameDto.Patronymic!).Value;
+
+        var phoneNumber = PhoneNumber.Create(command.PhoneNumber).Value;
+
+        var email = Email.Create(command.Email).Value;
+       
+        var description = Description.Create(command.Description).Value;
+
+        var expirienceInYears = ExperienceInYears.Create(command.ExperienceInYears).Value;
+        
+        var detailsResult = command.PaymentDetails?
+            .Select(d => PaymentDetail.Create(d.Title, d.Description).Value)
+            .ToList();
+       
+        var networksResult = command.SocialNetworks?
+            .Select(n => SocialNetwork.Create(n.Name, n.Link).Value)
+            .ToList();
+        
+        var volunteer = await _volunteersRepository.GetByNumber(phoneNumber.Value, cancellationToken);
+
+        if (volunteer.IsSuccess)
+            return Errors.Volunteer.AlreadyExist();
+
+        var volunteerId = VolunteerId.NewVolunteerId();
+
+        var volunteerToCreate = new Domain.AnimalManagement.AggregateRoot.Volunteer(
+            volunteerId,
+            fullName,
+            email,
+            description,
+            expirienceInYears,
+            phoneNumber,
+            detailsResult,
+            networksResult);
+
+        await _volunteersRepository.Add(volunteerToCreate, cancellationToken);
+        
+        _logger.LogInformation("Created volunteer with Id {volunteerId}", volunteerId);
+
+        return (Guid)volunteerToCreate.Id;
+    }
+}

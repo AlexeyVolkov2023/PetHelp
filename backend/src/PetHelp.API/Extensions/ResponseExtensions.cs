@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using PetHelp.API.Response;
 using PetHelp.Domain.Shared;
 
-
 namespace PetHelp.API.Extensions;
 
 public static class ResponseExtensions

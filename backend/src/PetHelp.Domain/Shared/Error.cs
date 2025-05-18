@@ -7,7 +7,6 @@ public record Error
     public string Code { get; }
     public string Message { get; }
     public ErrorType Type { get; }
-
     public string? InvalidField { get; }
 
     private Error(string code, string message, ErrorType type, string? invalidField = null)
