@@ -53,7 +53,7 @@ public class VolunteerController : ApplicationController
         return Ok(result.Value);
     }
 
-    [HttpPatch("{id:guid}/payment_detail)")]
+    [HttpPatch("{id:guid}/payment-detail)")]
     public async Task<ActionResult> UpdatePaymentDetail(
         [FromRoute] Guid id,
         [FromServices] UpdatePaymentDetailHandler handler,
@@ -69,7 +69,7 @@ public class VolunteerController : ApplicationController
         return Ok(result.Value);
     }
 
-    [HttpPatch("{id:guid}/social_network)")]
+    [HttpPatch("{id:guid}/social-network)")]
     public async Task<ActionResult> UpdateSocialNetwork(
         [FromRoute] Guid id,
         [FromServices] UpdateSocialNetworkHandler handler,
@@ -85,7 +85,7 @@ public class VolunteerController : ApplicationController
         return Ok(result.Value);
     }
     
-    [HttpDelete("{id:guid}")]
+    [HttpDelete("soft/{id:guid}")]
     public async Task<ActionResult> SoftDelete(
         [FromRoute] Guid id,
         [FromServices] SoftDeleteHandler handler,

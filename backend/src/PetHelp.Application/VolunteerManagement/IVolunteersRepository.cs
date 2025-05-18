@@ -24,9 +24,9 @@ public interface IVolunteersRepository
         CancellationToken cancellationToken = default);  
     
     Task<Guid> SoftDelete(
-        Domain.AnimalManagement.AggregateRoot.Volunteer volunteer,
+        Volunteer volunteer,
         CancellationToken cancellationToken = default);
     Task<Guid> HardDelete(
-        Domain.AnimalManagement.AggregateRoot.Volunteer volunteer,
+        Volunteer volunteer,
         CancellationToken cancellationToken = default);
 }
