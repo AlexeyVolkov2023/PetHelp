@@ -4,14 +4,14 @@ using PetHelp.Application.Validations;
 using PetHelp.Domain.AnimalManagement.VO;
 using PetHelp.Domain.Shared;
 
-namespace PetHelp.Application.VolunteerManagement.CreateVolunteer;
+namespace PetHelp.Application.VolunteerManagement.Create;
 
-public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteerCommand>
+public class CreateCommandValidator : AbstractValidator<CreateCommand>
 {
-    public CreateVolunteerCommandValidator()
+    public CreateCommandValidator()
     {
         RuleFor(c => c.FullNameDto)
-            .SetValidator(new CreateFullNameDtosValidator());
+            .SetValidator(new FullNameDtoValidator());
         RuleFor(c => c.Email)
             .MustBeValueObject(Email.Create);
         RuleFor(c => c.Description)
@@ -20,9 +20,11 @@ public class CreateVolunteerCommandValidator : AbstractValidator<CreateVolunteer
             .MustBeValueObject(ExperienceInYears.Create);
         RuleFor(c => c.PhoneNumber)
             .MustBeValueObject(PhoneNumber.Create);
-        RuleForEach(c => c.Details)
-            .MustBeValueObject(s => PaymentDetail.Create(s.Title, s.Description));
-        RuleForEach(c => c.Networks)
-            .MustBeValueObject(s => SocialNetwork.Create(s.Name, s.Link));
+        RuleForEach(c => c.PaymentDetails)
+            .SetValidator(new PaymentDetailDtoValidator());
+        RuleForEach(c => c.SocialNetworks)
+            .SetValidator(new SocialNetworkDtoValidator());
     }
 }
+
+

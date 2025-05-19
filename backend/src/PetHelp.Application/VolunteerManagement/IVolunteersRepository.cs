@@ -18,4 +18,15 @@ public interface IVolunteersRepository
     Task<Result<Volunteer, Error>>  GetByNumber(
         string requestPhoneNumber,
         CancellationToken cancellationToken);
+    
+    Task<Guid> Save(
+        Volunteer volunteer,
+        CancellationToken cancellationToken = default);  
+    
+    Task<Guid> SoftDelete(
+        Volunteer volunteer,
+        CancellationToken cancellationToken = default);
+    Task<Guid> HardDelete(
+        Volunteer volunteer,
+        CancellationToken cancellationToken = default);
 }

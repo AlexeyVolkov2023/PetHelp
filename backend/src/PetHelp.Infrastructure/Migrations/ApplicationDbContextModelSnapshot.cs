@@ -29,15 +29,19 @@ namespace PetHelp.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Details")
+                    b.Property<string>("PaymentDetails")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("payment_details");
 
-                    b.Property<string>("Networks")
+                    b.Property<string>("SocialNetworks")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("social+networks");
+                        .HasColumnName("social_networks");
+
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetHelp.Domain.AnimalManagement.AggregateRoot.Volunteer.Description#Description", b1 =>
                         {

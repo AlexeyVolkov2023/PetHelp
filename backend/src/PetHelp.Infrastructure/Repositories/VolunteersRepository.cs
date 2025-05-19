@@ -8,7 +8,8 @@ using PetHelp.Domain.Shared;
 namespace PetHelp.Infrastructure.Repositories;
 
 
-public class VolunteersRepository(ApplicationDbContext dbContext) : IVolunteersRepository
+public class VolunteersRepository(
+    IApplicationDbContext dbContext) : IVolunteersRepository
 {
     public async Task<Guid> Add(
         Volunteer volunteer,
@@ -28,11 +29,9 @@ public class VolunteersRepository(ApplicationDbContext dbContext) : IVolunteersR
         var volunteer = await dbContext.Volunteers
             .Include(v => v.Pets)
             .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
-
         if (volunteer is null)
-        {
             return Errors.General.NotFound(volunteerId);
-        }
+        
 
         return volunteer;
     }
@@ -44,12 +43,40 @@ public class VolunteersRepository(ApplicationDbContext dbContext) : IVolunteersR
         var volunteer = await dbContext.Volunteers
             .Include(v => v.Pets)
             .FirstOrDefaultAsync(v => v.PhoneNumber.Value == requestPhoneNumber , cancellationToken);
-       
         if (volunteer is null)
-        {
             return Errors.General.NotFound();
-        }
+        
 
         return volunteer;
     }
+    public async Task<Guid> Save(
+        Volunteer volunteer,
+        CancellationToken cancellationToken = default)
+    {
+        dbContext.Volunteers.Attach(volunteer);
+        
+        await dbContext.SaveChangesAsync(cancellationToken);
+        
+        return volunteer.Id; }
+    
+    public async Task<Guid> SoftDelete(
+        Volunteer volunteer,
+        CancellationToken cancellationToken = default)
+    {
+        await dbContext.SaveChangesAsync(cancellationToken);
+        
+        return volunteer.Id;
+    }
+    
+    public async Task<Guid> HardDelete(
+        Volunteer volunteer,
+        CancellationToken cancellationToken = default)
+    {
+        dbContext.Volunteers.Remove(volunteer);
+        
+        await dbContext.SaveChangesAsync(cancellationToken);
+        
+        return volunteer.Id;
+    }
+    
 }

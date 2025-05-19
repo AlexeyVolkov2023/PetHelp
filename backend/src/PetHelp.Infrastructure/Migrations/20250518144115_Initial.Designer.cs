@@ -13,8 +13,8 @@ using PetHelp.Infrastructure;
 namespace PetHelp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250201165544_Initial2")]
-    partial class Initial2
+    [Migration("20250518144115_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,15 +32,19 @@ namespace PetHelp.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Details")
+                    b.Property<string>("PaymentDetails")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("details");
+                        .HasColumnName("payment_details");
 
-                    b.Property<string>("Networks")
+                    b.Property<string>("SocialNetworks")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("networks");
+                        .HasColumnName("social_networks");
+
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.ComplexProperty<Dictionary<string, object>>("Description", "PetHelp.Domain.AnimalManagement.AggregateRoot.Volunteer.Description#Description", b1 =>
                         {
@@ -50,7 +54,7 @@ namespace PetHelp.Infrastructure.Migrations
                                 .IsRequired()
                                 .HasMaxLength(1000)
                                 .HasColumnType("character varying(1000)")
-                                .HasColumnName("description_value");
+                                .HasColumnName("description");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("Email", "PetHelp.Domain.AnimalManagement.AggregateRoot.Volunteer.Email#Email", b1 =>
@@ -119,18 +123,6 @@ namespace PetHelp.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Address")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .HasColumnType("character varying(150)")
-                        .HasColumnName("address");
-
-                    b.Property<string>("Color")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
-                        .HasColumnName("color");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -139,56 +131,117 @@ namespace PetHelp.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("date_of_birth");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("description");
-
                     b.Property<string>("Details")
                         .IsRequired()
                         .HasColumnType("text")
-                        .HasColumnName("details");
-
-                    b.Property<string>("HealthInfo")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)")
-                        .HasColumnName("health_info");
-
-                    b.Property<double>("Height")
-                        .HasMaxLength(200)
-                        .HasColumnType("double precision")
-                        .HasColumnName("height");
-
-                    b.Property<bool>("IsNeutered")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_neutered");
-
-                    b.Property<bool>("IsVaccinated")
-                        .HasColumnType("boolean")
-                        .HasColumnName("is_vaccinated");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
-                        .HasColumnName("name");
-
-                    b.Property<string>("OwnerPhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)")
-                        .HasColumnName("owner_phone_number");
-
-                    b.Property<double>("Weight")
-                        .HasMaxLength(200)
-                        .HasColumnType("double precision")
-                        .HasColumnName("weight");
+                        .HasColumnName("payment_details");
 
                     b.Property<Guid>("volunteer_id")
                         .HasColumnType("uuid")
                         .HasColumnName("volunteer_id");
+
+                    b.ComplexProperty<Dictionary<string, object>>("Address", "PetHelp.Domain.AnimalManagement.Entities.Pet.Address#Address", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<int?>("Apartment")
+                                .HasMaxLength(1600)
+                                .HasColumnType("integer")
+                                .HasColumnName("apartment");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasMaxLength(35)
+                                .HasColumnType("character varying(35)")
+                                .HasColumnName("city");
+
+                            b1.Property<string>("Country")
+                                .IsRequired()
+                                .HasMaxLength(35)
+                                .HasColumnType("character varying(35)")
+                                .HasColumnName("country");
+
+                            b1.Property<string>("HouseNumber")
+                                .IsRequired()
+                                .HasMaxLength(6)
+                                .HasColumnType("character varying(6)")
+                                .HasColumnName("house_number");
+
+                            b1.Property<string>("Region")
+                                .IsRequired()
+                                .HasMaxLength(35)
+                                .HasColumnType("character varying(35)")
+                                .HasColumnName("region");
+
+                            b1.Property<string>("Street")
+                                .IsRequired()
+                                .HasMaxLength(35)
+                                .HasColumnType("character varying(35)")
+                                .HasColumnName("street");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("OwnerPhoneNumber", "PetHelp.Domain.AnimalManagement.Entities.Pet.OwnerPhoneNumber#PhoneNumber", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("character varying(20)")
+                                .HasColumnName("owner_phone_number");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("PetData", "PetHelp.Domain.AnimalManagement.Entities.Pet.PetData#PetData", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Color")
+                                .IsRequired()
+                                .HasMaxLength(15)
+                                .HasColumnType("character varying(15)")
+                                .HasColumnName("color");
+
+                            b1.Property<string>("HealthInfo")
+                                .IsRequired()
+                                .HasMaxLength(250)
+                                .HasColumnType("character varying(250)")
+                                .HasColumnName("health_info");
+
+                            b1.Property<double>("Height")
+                                .HasMaxLength(200)
+                                .HasColumnType("double precision")
+                                .HasColumnName("Weight");
+
+                            b1.Property<bool>("IsNeutered")
+                                .HasColumnType("boolean")
+                                .HasColumnName("is_neutered");
+
+                            b1.Property<bool>("IsVaccinated")
+                                .HasColumnType("boolean")
+                                .HasColumnName("is_vaccinated");
+
+                            b1.Property<double>("Weight")
+                                .HasMaxLength(200)
+                                .HasColumnType("double precision")
+                                .HasColumnName("weight");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("PetInfo", "PetHelp.Domain.AnimalManagement.Entities.Pet.PetInfo#PetInfo", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Description")
+                                .IsRequired()
+                                .HasMaxLength(1000)
+                                .HasColumnType("character varying(1000)")
+                                .HasColumnName("description");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasMaxLength(15)
+                                .HasColumnType("character varying(15)")
+                                .HasColumnName("name");
+                        });
 
                     b.ComplexProperty<Dictionary<string, object>>("Status", "PetHelp.Domain.AnimalManagement.Entities.Pet.Status#PetStatus", b1 =>
                         {
@@ -197,7 +250,7 @@ namespace PetHelp.Infrastructure.Migrations
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("text")
-                                .HasColumnName("status_value");
+                                .HasColumnName("status");
                         });
 
                     b.HasKey("Id")
@@ -266,11 +319,11 @@ namespace PetHelp.Infrastructure.Migrations
 
                             b1.Property<Guid>("BreedId")
                                 .HasColumnType("uuid")
-                                .HasColumnName("species_breed_breed_id");
+                                .HasColumnName("breed_id");
 
                             b1.Property<Guid>("SpeciesId")
                                 .HasColumnType("uuid")
-                                .HasColumnName("species_breed_species_id");
+                                .HasColumnName("species_id");
 
                             b1.HasKey("PetId");
 

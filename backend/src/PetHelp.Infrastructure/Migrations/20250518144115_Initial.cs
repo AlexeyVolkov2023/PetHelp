@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PetHelp.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial1 : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -41,15 +41,16 @@ namespace PetHelp.Infrastructure.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    networks = table.Column<string>(type: "text", nullable: false),
-                    details = table.Column<string>(type: "text", nullable: false),
-                    description_value = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    email_value = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    experience_in_years_value = table.Column<int>(type: "integer", maxLength: 100, nullable: false),
-                    full_name_name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    full_name_patronymic = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
-                    full_name_surname = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    phone_number_value = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false)
+                    social_networks = table.Column<string>(type: "text", nullable: false),
+                    payment_details = table.Column<string>(type: "text", nullable: false),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+                    description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    experience_in_years = table.Column<int>(type: "integer", maxLength: 100, nullable: false),
+                    name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    patronymic = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
+                    surname = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -62,22 +63,27 @@ namespace PetHelp.Infrastructure.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     volunteer_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    color = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    health_info = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    address = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    weight = table.Column<double>(type: "double precision", maxLength: 200, nullable: false),
-                    height = table.Column<double>(type: "double precision", maxLength: 200, nullable: false),
-                    owner_phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
-                    is_neutered = table.Column<bool>(type: "boolean", nullable: false),
                     date_of_birth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
-                    details = table.Column<string>(type: "text", nullable: false),
+                    payment_details = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    species_breed_species_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    species_breed_breed_id = table.Column<Guid>(type: "uuid", nullable: false),
-                    status_value = table.Column<string>(type: "text", nullable: false)
+                    species_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    breed_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    apartment = table.Column<int>(type: "integer", maxLength: 1600, nullable: true),
+                    city = table.Column<string>(type: "character varying(35)", maxLength: 35, nullable: false),
+                    country = table.Column<string>(type: "character varying(35)", maxLength: 35, nullable: false),
+                    house_number = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: false),
+                    region = table.Column<string>(type: "character varying(35)", maxLength: 35, nullable: false),
+                    street = table.Column<string>(type: "character varying(35)", maxLength: 35, nullable: false),
+                    owner_phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    color = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    health_info = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
+                    Weight = table.Column<double>(type: "double precision", maxLength: 200, nullable: false),
+                    is_neutered = table.Column<bool>(type: "boolean", nullable: false),
+                    is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
+                    weight = table.Column<double>(type: "double precision", maxLength: 200, nullable: false),
+                    description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    status = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {

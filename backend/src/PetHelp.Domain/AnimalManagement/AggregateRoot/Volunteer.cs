@@ -6,9 +6,10 @@ using PetHelp.Domain.Shared;
 
 namespace PetHelp.Domain.AnimalManagement.AggregateRoot;
 
-public class Volunteer : Entity<VolunteerId>
+public class Volunteer : Entity<VolunteerId>, ISoftDeletable
 {
     private readonly List<Pet> _pets = [];
+    private bool _isDeleted = false;
 
     private Volunteer(VolunteerId id) : base(id)
     {
@@ -29,8 +30,8 @@ public class Volunteer : Entity<VolunteerId>
         Description = description;
         ExperienceInYears = experienceInYears;
         PhoneNumber = phoneNumber;
-        Details = details?.ToList() ?? [];
-        Networks = networks?.ToList() ?? [];
+        PaymentDetails = details?.ToList() ?? [];
+        SocialNetworks = networks?.ToList() ?? [];
     }
 
     public FullName FullName { get; private set; }
@@ -38,8 +39,8 @@ public class Volunteer : Entity<VolunteerId>
     public Description Description { get; private set; }
     public ExperienceInYears ExperienceInYears { get; private set; }
     public PhoneNumber PhoneNumber { get; private set; }
-    public IReadOnlyList<SocialNetwork> Networks { get; private set; }
-    public IReadOnlyList<PaymentDetail> Details { get; private set; }
+    public IReadOnlyList<SocialNetwork> SocialNetworks { get; private set; }
+    public IReadOnlyList<PaymentDetail> PaymentDetails { get; private set; }
     public IReadOnlyList<Pet> Pets => _pets;
 
     public int GetPetCountByStatus(string status)
@@ -72,4 +73,49 @@ public class Volunteer : Entity<VolunteerId>
             details,
             networks);
     }
+    
+    public void UpdateMainInfo(
+        FullName fullName,
+        Email email,
+        Description description,
+        ExperienceInYears experienceInYears,
+        PhoneNumber phoneNumber)
+    {
+        FullName = fullName;
+        Email = email;
+        Description = description;
+        ExperienceInYears = experienceInYears;
+        PhoneNumber = phoneNumber;
+    }
+    
+    public void UpdateSocialNetworks (IEnumerable<SocialNetwork> newSocialNetworks)
+    {
+        SocialNetworks = newSocialNetworks.ToList();
+    }
+
+    public void UpdatePaymentDetail(IEnumerable<PaymentDetail> newPaymentDetails)
+    {
+        PaymentDetails = newPaymentDetails.ToList();
+    }
+
+    public void SoftDelete() 
+    {
+        if (_isDeleted == false)
+            _isDeleted = true;
+        
+        foreach (var pet in _pets)
+        {
+            pet.SoftDelete();
+        }
+    }
+    public void Restore()
+    {
+        if (_isDeleted)
+            _isDeleted = false;
+        foreach (var pet in _pets)
+        {
+            pet.Restore();
+        }
+    }
+    
 }

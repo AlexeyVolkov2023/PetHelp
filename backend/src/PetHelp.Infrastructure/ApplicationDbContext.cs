@@ -6,7 +6,7 @@ using PetHelp.Domain.SpeciesManagement.AgregateRoot;
 
 namespace PetHelp.Infrastructure;
 
-public class ApplicationDbContext(IConfiguration configuration) : DbContext
+public class ApplicationDbContext(IConfiguration configuration) : DbContext, IApplicationDbContext
 {
     private const string DATABASE = "Database"; 
 

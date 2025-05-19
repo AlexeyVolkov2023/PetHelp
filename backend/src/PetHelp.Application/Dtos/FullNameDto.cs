@@ -1,6 +1,6 @@
 ﻿namespace PetHelp.Application.Dtos;
 
-public record CreateFullNameDtos(
+public record FullNameDto(
     string Name,
     string Surname,
-    string? Patronymik);
+    string? Patronymic);
