@@ -29,7 +29,14 @@ public static class Errors
         {
             return Error.Validation("record.already.exist", "Volunteer already exist");
         }
-        
-        
+    }
+    
+    public static class FileProvider
+    {
+        public static Error NotFound(string? objectName = null)
+        {
+            var label = objectName == null ? "" : " " + objectName + " ";
+            return Error.NotFound("file.not_found", $"{objectName} not found");
+        }
     }
 }

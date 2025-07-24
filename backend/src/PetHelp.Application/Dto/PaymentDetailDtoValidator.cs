@@ -2,7 +2,7 @@
 using PetHelp.Application.Validations;
 using PetHelp.Domain.Shared;
 
-namespace PetHelp.Application.Dtos;
+namespace PetHelp.Application.Dto;
 
 public class PaymentDetailDtoValidator :AbstractValidator<PaymentDetailDto>
 {

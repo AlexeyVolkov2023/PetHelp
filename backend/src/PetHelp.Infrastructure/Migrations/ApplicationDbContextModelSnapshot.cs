@@ -124,14 +124,19 @@ namespace PetHelp.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("date_of_birth");
+                    b.Property<string>("Files")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("files");
 
-                    b.Property<string>("Details")
+                    b.Property<string>("PaymentDetails")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("payment_details");
+
+                    b.Property<bool>("_isDeleted")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_deleted");
 
                     b.Property<Guid>("volunteer_id")
                         .HasColumnType("uuid")
@@ -177,15 +182,13 @@ namespace PetHelp.Infrastructure.Migrations
                                 .HasColumnName("street");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("OwnerPhoneNumber", "PetHelp.Domain.AnimalManagement.Entities.Pet.OwnerPhoneNumber#PhoneNumber", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("DateOfBirth", "PetHelp.Domain.AnimalManagement.Entities.Pet.DateOfBirth#DateOfBirth", b1 =>
                         {
                             b1.IsRequired();
 
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasMaxLength(20)
-                                .HasColumnType("character varying(20)")
-                                .HasColumnName("owner_phone_number");
+                            b1.Property<DateTime>("Date")
+                                .HasColumnType("timestamp with time zone")
+                                .HasColumnName("date_of_birth");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("PetData", "PetHelp.Domain.AnimalManagement.Entities.Pet.PetData#PetData", b1 =>
@@ -240,11 +243,22 @@ namespace PetHelp.Infrastructure.Migrations
                                 .HasColumnName("name");
                         });
 
-                    b.ComplexProperty<Dictionary<string, object>>("Status", "PetHelp.Domain.AnimalManagement.Entities.Pet.Status#PetStatus", b1 =>
+                    b.ComplexProperty<Dictionary<string, object>>("PhoneNumber", "PetHelp.Domain.AnimalManagement.Entities.Pet.PhoneNumber#PhoneNumber", b1 =>
                         {
                             b1.IsRequired();
 
                             b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasMaxLength(20)
+                                .HasColumnType("character varying(20)")
+                                .HasColumnName("owner_phone_number");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Status", "PetHelp.Domain.AnimalManagement.Entities.Pet.Status#PetStatus", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Status")
                                 .IsRequired()
                                 .HasColumnType("text")
                                 .HasColumnName("status");

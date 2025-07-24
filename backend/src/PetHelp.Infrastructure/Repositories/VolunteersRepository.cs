@@ -1,5 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
+using PetHelp.Application;
+using PetHelp.Application.Database;
 using PetHelp.Application.VolunteerManagement;
 using PetHelp.Domain.AnimalManagement.AggregateRoot;
 using PetHelp.Domain.AnimalManagement.ID;
@@ -11,7 +13,7 @@ namespace PetHelp.Infrastructure.Repositories;
 public class VolunteersRepository(
     IApplicationDbContext dbContext) : IVolunteersRepository
 {
-    public async Task<Guid> Add(
+    /*public async Task<Guid> Add(
         Volunteer volunteer,
         CancellationToken cancellationToken = default)
     {
@@ -20,7 +22,7 @@ public class VolunteersRepository(
         await dbContext.SaveChangesAsync(cancellationToken);
 
         return volunteer.Id;
-    }
+    }*/
     
     public async Task<Result<Volunteer, Error>> GetById(
         VolunteerId volunteerId,
@@ -45,38 +47,32 @@ public class VolunteersRepository(
             .FirstOrDefaultAsync(v => v.PhoneNumber.Value == requestPhoneNumber , cancellationToken);
         if (volunteer is null)
             return Errors.General.NotFound();
-        
 
         return volunteer;
     }
-    public async Task<Guid> Save(
+    /*public Guid Save(
         Volunteer volunteer,
         CancellationToken cancellationToken = default)
     {
         dbContext.Volunteers.Attach(volunteer);
         
-        await dbContext.SaveChangesAsync(cancellationToken);
-        
-        return volunteer.Id; }
-    
-    public async Task<Guid> SoftDelete(
-        Volunteer volunteer,
-        CancellationToken cancellationToken = default)
-    {
-        await dbContext.SaveChangesAsync(cancellationToken);
-        
         return volunteer.Id;
     }
     
-    public async Task<Guid> HardDelete(
+    public Guid SoftDelete(
+        Volunteer volunteer,
+        CancellationToken cancellationToken = default)
+    {
+        return volunteer.Id;
+    }
+    
+    public Guid HardDelete(
         Volunteer volunteer,
         CancellationToken cancellationToken = default)
     {
         dbContext.Volunteers.Remove(volunteer);
         
-        await dbContext.SaveChangesAsync(cancellationToken);
-        
         return volunteer.Id;
-    }
+    }*/
     
 }

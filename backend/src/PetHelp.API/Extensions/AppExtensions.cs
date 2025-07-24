@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using PetHelp.Application;
+using PetHelp.Application.Database;
 using PetHelp.Infrastructure;
 
 namespace PetHelp.API.Extensions;

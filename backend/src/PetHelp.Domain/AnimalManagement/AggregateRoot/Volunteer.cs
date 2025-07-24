@@ -43,16 +43,6 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
     public IReadOnlyList<PaymentDetail> PaymentDetails { get; private set; }
     public IReadOnlyList<Pet> Pets => _pets;
 
-    public int GetPetCountByStatus(string status)
-    {
-        return Pets.Count(pet => pet.Status.Value == status);
-    }
-
-    public void AddOwnedPet(Pet pet)
-    {
-        _pets.Add(pet);
-    }
-
     public static Result<Volunteer, Error> Create(
         VolunteerId id,
         FullName fullName,
@@ -73,7 +63,19 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
             details,
             networks);
     }
-    
+
+    public int GetPetCountByStatus(string status)
+    {
+        return Pets.Count(pet => pet.Status.Status == status);
+    }
+
+    public UnitResult<Error> AddPet(Pet pet)
+    {
+        _pets.Add(pet);
+        return Result.Success<Error>();
+    } 
+   
+
     public void UpdateMainInfo(
         FullName fullName,
         Email email,
@@ -87,8 +89,8 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
         ExperienceInYears = experienceInYears;
         PhoneNumber = phoneNumber;
     }
-    
-    public void UpdateSocialNetworks (IEnumerable<SocialNetwork> newSocialNetworks)
+
+    public void UpdateSocialNetworks(IEnumerable<SocialNetwork> newSocialNetworks)
     {
         SocialNetworks = newSocialNetworks.ToList();
     }
@@ -98,16 +100,17 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
         PaymentDetails = newPaymentDetails.ToList();
     }
 
-    public void SoftDelete() 
+    public void SoftDelete()
     {
         if (_isDeleted == false)
             _isDeleted = true;
-        
+
         foreach (var pet in _pets)
         {
             pet.SoftDelete();
         }
     }
+
     public void Restore()
     {
         if (_isDeleted)
@@ -117,5 +120,4 @@ public class Volunteer : Entity<VolunteerId>, ISoftDeletable
             pet.Restore();
         }
     }
-    
 }

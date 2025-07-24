@@ -19,10 +19,8 @@ public class Breed : Entity<BreedId>
         string name)
     {
         if (string.IsNullOrWhiteSpace(name))
-        {
-            return Errors.General.ValueIsInvalid("Name");
-        } 
-
+            return Errors.General.ValueIsInvalid("name");
+        
         return new Breed(id, name);
     }
 }

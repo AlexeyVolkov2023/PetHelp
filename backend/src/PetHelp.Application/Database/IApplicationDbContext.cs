@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using PetHelp.Domain.AnimalManagement.AggregateRoot;
 using PetHelp.Domain.SpeciesManagement.AgregateRoot;
 
-namespace PetHelp.Infrastructure;
+namespace PetHelp.Application.Database;
 
 public interface IApplicationDbContext
 {
@@ -13,4 +15,7 @@ public interface IApplicationDbContext
     DatabaseFacade Database { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    
+    Task<IDbContextTransaction> BeginTransaction(CancellationToken cancellationToken = default);
+  
 }

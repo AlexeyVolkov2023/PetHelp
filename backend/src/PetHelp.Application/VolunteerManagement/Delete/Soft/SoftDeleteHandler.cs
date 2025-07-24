@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetHelp.Application.Database;
 using PetHelp.Application.Extensions;
 using PetHelp.Domain.Shared;
 
@@ -11,15 +12,18 @@ public class SoftDeleteHandler
     private readonly IVolunteersRepository _volunteersRepository;
     private readonly IValidator<SoftDeleteCommand> _validator;
     private readonly ILogger<SoftDeleteHandler> _logger;
+    private readonly IApplicationDbContext _dbContext;
 
     public SoftDeleteHandler(
         IVolunteersRepository volunteersRepository,
         IValidator<SoftDeleteCommand> validator,
-        ILogger<SoftDeleteHandler> logger)
+        ILogger<SoftDeleteHandler> logger,
+        IApplicationDbContext dbContext)
     {
         _volunteersRepository = volunteersRepository;
         _validator = validator;
         _logger = logger;
+        _dbContext = dbContext;
     } 
     
     public async Task<Result<Guid, ErrorList>> Handle(
@@ -36,10 +40,10 @@ public class SoftDeleteHandler
         
         volunteerResult.Value.SoftDelete();
         
-        var result = await _volunteersRepository.SoftDelete(volunteerResult.Value, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
         
         _logger.LogInformation("Deleted volunteer with Id {volunteerId}", command.VolunteerId);
         
-        return result;
+        return volunteerResult.Value.Id.Value;
     }
 }

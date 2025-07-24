@@ -1,4 +1,4 @@
-﻿using PetHelp.Application.Dtos;
+﻿using PetHelp.Application.Dto;
 
 namespace PetHelp.Application.VolunteerManagement.UpdateSocialNetwork;
 

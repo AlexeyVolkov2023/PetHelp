@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using CSharpFunctionalExtensions;
 using FluentValidation;
+using PetHelp.Application.Database;
 using PetHelp.Application.Extensions;
 using PetHelp.Domain.AnimalManagement.VO;
 using PetHelp.Domain.Shared;
@@ -11,15 +12,18 @@ public class UpdateMainInfoHandler
 {
     private readonly IVolunteersRepository _volunteersRepository;
     private readonly IValidator<UpdateMainInfoCommand> _validator;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ILogger<UpdateMainInfoHandler> _logger;
 
     public UpdateMainInfoHandler(
         IVolunteersRepository volunteersRepository,
         IValidator<UpdateMainInfoCommand> validator,
+        IApplicationDbContext dbContext,
         ILogger<UpdateMainInfoHandler> logger)
     {
         _volunteersRepository = volunteersRepository;
         _validator = validator;
+        _dbContext = dbContext;
         _logger = logger;
     }
 
@@ -50,10 +54,10 @@ public class UpdateMainInfoHandler
 
         volunteerResult.Value.UpdateMainInfo(fullName, email, description, experienceYears, phoneNumber);
 
-        var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         _logger.LogInformation("Updated main info for volunteer with Id {volunteerId}", command.VolunteerId);
 
-        return result;
+        return volunteerResult.Value.Id.Value;
     }
 }

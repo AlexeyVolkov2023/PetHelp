@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using PetHelp.Application.Database;
 using PetHelp.Domain.AnimalManagement.AggregateRoot;
 using PetHelp.Domain.SpeciesManagement.AgregateRoot;
 
@@ -27,4 +29,14 @@ public class ApplicationDbContext(IConfiguration configuration) : DbContext, IAp
 
     private ILoggerFactory CreateLoggerFactory() =>
         LoggerFactory.Create(builder => { builder.AddConsole(); });
+    
+    public async Task<IDbContextTransaction> BeginTransaction(CancellationToken cancellationToken = default)
+    {
+        return await base.Database.BeginTransactionAsync(cancellationToken);
+    }
+
+    public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return base.SaveChangesAsync(cancellationToken);
+    }
 }

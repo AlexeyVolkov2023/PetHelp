@@ -7,9 +7,11 @@ namespace PetHelp.Application.VolunteerManagement;
 
 public interface IVolunteersRepository
 {
+    /*
     Task<Guid> Add(
         Volunteer volunteer,
         CancellationToken cancellationToken = default);
+        */
 
     Task<Result<Volunteer, Error>> GetById(
         VolunteerId volunteerId,
@@ -19,14 +21,15 @@ public interface IVolunteersRepository
         string requestPhoneNumber,
         CancellationToken cancellationToken);
     
-    Task<Guid> Save(
+    /*Guid Save(
         Volunteer volunteer,
         CancellationToken cancellationToken = default);  
     
-    Task<Guid> SoftDelete(
+    Guid SoftDelete(
         Volunteer volunteer,
         CancellationToken cancellationToken = default);
-    Task<Guid> HardDelete(
+    
+    Guid HardDelete(
         Volunteer volunteer,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken = default);*/
 }

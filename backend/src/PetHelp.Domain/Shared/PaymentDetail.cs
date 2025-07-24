@@ -26,14 +26,10 @@ public class PaymentDetail : ComparableValueObject
     public static Result<PaymentDetail, Error> Create(string title, string description)
     {
         if (string.IsNullOrWhiteSpace(title) || title.Length > Constants.TITLE_MAX_LENGTH)
-        {
-            return Errors.General.ValueIsInvalid("Title");
-        } 
+            return Errors.General.ValueIsInvalid("title"); 
         
         if (string.IsNullOrWhiteSpace(description) || description.Length > Constants.DESCRIPTION_MAX_LENGTH)
-        {
-            return Errors.General.ValueIsInvalid("Description");
-        }
+            return Errors.General.ValueIsInvalid("description");
 
         return new PaymentDetail(title, description);
     }

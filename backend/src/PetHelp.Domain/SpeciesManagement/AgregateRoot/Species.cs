@@ -29,9 +29,7 @@ public class Species : Entity<SpeciesId>
         IEnumerable<Breed>? breeds)
     {
         if (string.IsNullOrWhiteSpace(title))
-        {
-            return Errors.General.ValueIsInvalid("Title");
-        } 
+            return Errors.General.ValueIsInvalid("title");
 
         return new Species(id, title, breeds);
     }
