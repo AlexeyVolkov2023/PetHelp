@@ -38,14 +38,10 @@ public record Error
         var parts = serialized.Split(SEPARATOR);
 
         if (parts.Length < 3)
-        {
             throw new ArgumentException("Invalid serialized format");
-        }
 
         if (Enum.TryParse<ErrorType>(parts[2], out var type) == false)
-        {
             throw new ArgumentException("Invalid serialized format");
-        }
 
         return new Error(parts[0], parts[1], type);
     }

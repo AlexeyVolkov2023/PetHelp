@@ -16,63 +16,66 @@ public class Pet : Entity<PetId>, ISoftDeletable
     {
     }
 
-    private Pet(
+    public Pet(
         PetId id,
         PetInfo petInfo,
         PetData petData,
         Address address,
-        PhoneNumber ownerPhoneNumber,
+        PhoneNumber phoneNumber,
         PetStatus status,
-        DateTime dateOfBirth,
+        DateOfBirth dateOfBirth,
         PetSpeciesBreed speciesBreed,
-        IEnumerable<PaymentDetail>? details = null) : base(id)
+        IEnumerable<PetFile>? files ,
+        IEnumerable<PaymentDetail>? details ) : base(id)
     {
         PetInfo = petInfo;
         PetData = petData;
         Address = address;
-        OwnerPhoneNumber = ownerPhoneNumber;
+        PhoneNumber = phoneNumber;
         Status = status;
         DateOfBirth = dateOfBirth;
         SpeciesBreed = speciesBreed;
-        Details = details?.ToList() ?? [];
+        Files = files?.ToList() ?? [];
+        PaymentDetails = details?.ToList() ?? [];
         CreatedAt = DateTime.UtcNow;
     }
 
     public PetInfo PetInfo { get; private set; }
     public PetData PetData { get; private set; }
     public Address Address { get; private set; }
-    public PhoneNumber OwnerPhoneNumber { get; private set; }
-    public DateTime DateOfBirth { get; private set; }
+    public PhoneNumber PhoneNumber { get; private set; }
+    public DateOfBirth DateOfBirth { get; private set; }
     public PetStatus Status { get; private set; }
-    public IReadOnlyList<PaymentDetail> Details { get; private set; }
+    public IReadOnlyList<PaymentDetail> PaymentDetails { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public PetSpeciesBreed SpeciesBreed { get; private set; }
+    public IReadOnlyList<PetFile> Files { get; private set; }
 
     public static Result<Pet, Error> Create(
         PetId id,
         PetInfo petInfo,
         PetData petData,
         Address address,
-        PhoneNumber ownerPhoneNumber,
+        PhoneNumber phoneNumber,
         PetStatus petStatus,
-        DateTime dateOfBirth,
+        DateOfBirth dateOfBirth,
         PetSpeciesBreed speciesBreed,
-        IEnumerable<PaymentDetail>? details = null)
+        IEnumerable<PetFile>? files,
+        IEnumerable<PaymentDetail>? details)
     {
-        if (dateOfBirth > DateTime.UtcNow)
-        {
-            return Errors.General.ValueIsRequired("DateOfBirth");
-        }
+        
+        
 
         return new Pet(
             id,
             petInfo,
             petData,
             address,
-            ownerPhoneNumber,
+            phoneNumber,
             petStatus,
             dateOfBirth,
             speciesBreed,
+            files,
             details);
     }
     

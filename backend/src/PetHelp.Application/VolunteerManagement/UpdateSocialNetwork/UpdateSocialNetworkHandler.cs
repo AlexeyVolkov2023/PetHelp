@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetHelp.Application.Database;
 using PetHelp.Application.Extensions;
 using PetHelp.Domain.AnimalManagement.VO;
 using PetHelp.Domain.Shared;
@@ -11,15 +12,18 @@ public class UpdateSocialNetworkHandler
 {
     private readonly IVolunteersRepository _volunteersRepository;
     private readonly IValidator<UpdateSocialNetworkCommand> _validator;
+    private readonly IApplicationDbContext _dbContext;
     private readonly ILogger<UpdateSocialNetworkHandler> _logger;
 
     public UpdateSocialNetworkHandler (
         IVolunteersRepository volunteersRepository,
         IValidator<UpdateSocialNetworkCommand> validator,
+        IApplicationDbContext dbContext,
         ILogger<UpdateSocialNetworkHandler> logger)
     {
         _volunteersRepository = volunteersRepository;
         _validator = validator;
+        _dbContext = dbContext;
         _logger = logger;
     }
     public async Task<Result<Guid, ErrorList>> Handle(
@@ -39,10 +43,10 @@ public class UpdateSocialNetworkHandler
         
         volunteerResult.Value.UpdateSocialNetworks(socialNetwork);
 
-        var result = await _volunteersRepository.Save(volunteerResult.Value, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
         
         _logger.LogInformation("Updated social network for volunteer with Id {volunteerId}", command.VolunteerId);
         
-        return result;
+        return volunteerResult.Value.Id.Value;
     }
 }

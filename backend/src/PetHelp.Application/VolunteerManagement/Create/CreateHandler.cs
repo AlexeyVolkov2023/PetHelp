@@ -1,6 +1,7 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
 using Microsoft.Extensions.Logging;
+using PetHelp.Application.Database;
 using PetHelp.Application.Extensions;
 using PetHelp.Domain.AnimalManagement.ID;
 using PetHelp.Domain.AnimalManagement.VO;
@@ -11,15 +12,18 @@ namespace PetHelp.Application.VolunteerManagement.Create;
 public class CreateHandler
 {
     private readonly IVolunteersRepository _volunteersRepository;
+    private readonly IApplicationDbContext _dbContext;
     private readonly IValidator<CreateCommand> _validator;
     private readonly ILogger<CreateHandler> _logger;
 
     public CreateHandler(
         IVolunteersRepository volunteersRepository,
+        IApplicationDbContext dbContext,
         IValidator<CreateCommand> validator,
         ILogger<CreateHandler> logger)
     {
         _volunteersRepository = volunteersRepository;
+        _dbContext = dbContext;
         _validator = validator;
         _logger = logger;
     }
@@ -70,7 +74,9 @@ public class CreateHandler
             detailsResult,
             networksResult);
 
-        await _volunteersRepository.Add(volunteerToCreate, cancellationToken);
+        await _dbContext.Volunteers.AddAsync(volunteerToCreate, cancellationToken);
+
+        await _dbContext.SaveChangesAsync(cancellationToken);
         
         _logger.LogInformation("Created volunteer with Id {volunteerId}", volunteerId);
 

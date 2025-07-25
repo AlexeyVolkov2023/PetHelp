@@ -14,21 +14,15 @@ public class PetInfo : ComparableValueObject
     public string Name { get; }
     public string Description { get; }
 
-
     public static Result<PetInfo, Error> Create(string name, string description)
     {
         if (string.IsNullOrWhiteSpace(name) || name.Length > Constants.NAME_MAX_LENGTH)
-        {
-            return Errors.General.ValueIsInvalid("Name");
-        }
+            return Errors.General.ValueIsInvalid("name");
 
         if (string.IsNullOrWhiteSpace(description) || description.Length > Constants.DESCRIPTION_MAX_LENGTH)
-        {
-            return Errors.General.ValueIsInvalid($"Description");
-        }
+            return Errors.General.ValueIsInvalid($"description");
 
         return new PetInfo(name, description);
-
     }
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
     {

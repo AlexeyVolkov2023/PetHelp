@@ -1,4 +1,4 @@
-﻿using PetHelp.Application.Dtos;
+﻿using PetHelp.Application.Dto;
 using PetHelp.Application.VolunteerManagement.Create;
 
 namespace PetHelp.API.Controllers.Volunteer.Requests;

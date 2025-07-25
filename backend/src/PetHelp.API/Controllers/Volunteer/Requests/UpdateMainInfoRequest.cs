@@ -1,5 +1,4 @@
-﻿using PetHelp.Application.Dtos;
-using PetHelp.Application.VolunteerManagement.UpdateMainInfo;
+﻿using PetHelp.Application.Dto;
 
 namespace PetHelp.API.Controllers.Volunteer.Requests;
 

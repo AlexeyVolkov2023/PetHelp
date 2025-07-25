@@ -22,21 +22,15 @@ public class FullName : ComparableValueObject
         string? patronymic)
     {
         if (string.IsNullOrWhiteSpace(name) || name.Length > Constants.NAME_MAX_LENGTH)
-        {
-            return Errors.General.ValueIsInvalid("Name");
-        }
+            return Errors.General.ValueIsInvalid("name");
 
         if (string.IsNullOrWhiteSpace(surname) || surname.Length > Constants.SURNAME_MAX_LENGTH)
-        {
-            return Errors.General.ValueIsInvalid("Surname");
-        }
+            return Errors.General.ValueIsInvalid("surname");
         
         patronymic = string.IsNullOrWhiteSpace(patronymic) ? null : patronymic;
 
         if (patronymic is not null && (patronymic.Length > Constants.PATRONYMIC_MAX_LENGTH))
-        {
-            return Errors.General.ValueIsInvalid("Patronymic");
-        }
+            return Errors.General.ValueIsInvalid("patronymic");
 
         return new FullName(name, surname, patronymic);
     }

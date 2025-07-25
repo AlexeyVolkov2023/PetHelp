@@ -23,7 +23,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddSerilog();
 
 builder.Services
-    .AddInfrastructure()
+    .AddInfrastructure(builder.Configuration)
     .AddApplication();
 
 var app = builder.Build();
@@ -32,12 +32,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
-    
+
     await app.ApplyMigration();
 }
 
 app.UseSerilogRequestLogging();
-    
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

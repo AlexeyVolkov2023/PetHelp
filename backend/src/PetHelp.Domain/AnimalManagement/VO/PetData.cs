@@ -38,24 +38,16 @@ public class PetData : ComparableValueObject
     )
     {
         if (string.IsNullOrWhiteSpace(color) || color.Length > Constants.COLOR_MAX_LENGTH)
-        {
-            return Errors.General.ValueIsInvalid("Color");
-        }
+            return Errors.General.ValueIsInvalid("color");
 
         if (string.IsNullOrWhiteSpace(healthInfo) || healthInfo.Length > Constants.HEALTH_INFO_MAX_LENGTH)
-        {
-            return Errors.General.ValueIsInvalid("Health");
-        }
+            return Errors.General.ValueIsInvalid("health info");
 
         if (weight <= 0 || weight > Constants.WEIGHT_MAX_VALUE)
-        {
-            return Errors.General.ValueIsInvalid("Weight");
-        }
+            return Errors.General.ValueIsInvalid("weight");
 
         if (height <= 0 || height > Constants.HEIGHT_MAX_VALUE)
-        {
-            return Errors.General.ValueIsInvalid("Height");
-        }
+            return Errors.General.ValueIsInvalid("height");
 
         return new PetData(color, healthInfo, weight, height, isNeutered, isVaccinated);
     }

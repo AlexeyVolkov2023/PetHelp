@@ -1,4 +1,4 @@
-﻿namespace PetHelp.Application.Dtos;
+﻿namespace PetHelp.Application.Dto;
 
 public record FullNameDto(
     string Name,

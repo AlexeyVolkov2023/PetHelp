@@ -1,9 +1,11 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using PetHelp.Domain.AnimalManagement.Entities;
 using PetHelp.Domain.AnimalManagement.ID;
+using PetHelp.Domain.AnimalManagement.VO;
 using PetHelp.Domain.Shared;
 
 
@@ -56,7 +58,7 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                     .HasColumnName("weight");
                 db.Property(d => d.IsNeutered)
                     .IsRequired(true)
-                    .HasColumnName("is_neutered"); 
+                    .HasColumnName("is_neutered");
                 db.Property(d => d.IsVaccinated)
                     .IsRequired(true)
                     .HasColumnName("is_vaccinated");
@@ -89,10 +91,9 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                     .HasMaxLength(Constants.APPARTMENT_MAX_VALUE)
                     .IsRequired(false)
                     .HasColumnName("apartment");
-                
             });
 
-        builder.ComplexProperty(p => p.OwnerPhoneNumber,
+        builder.ComplexProperty(p => p.PhoneNumber,
             pb =>
             {
                 pb.Property(n => n.Value)
@@ -103,18 +104,21 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
 
         builder.ComplexProperty(p => p.Status, sb =>
         {
-            sb.Property(s => s.Value)
+            sb.Property(s => s.Status)
                 .IsRequired(true)
                 .HasColumnName("status");
         });
 
-        builder.Property(p => p.DateOfBirth)
-            .HasConversion(
-                v => v.ToUniversalTime(),
-                v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
-            .IsRequired(true)
-            .HasColumnName("date_of_birth");
-      
+        builder.ComplexProperty(p => p.DateOfBirth, dob =>
+        {
+            dob.Property(d => d.Date)
+                .IsRequired(true)
+                .HasColumnName("date_of_birth")
+                .HasConversion(
+                    v => v.ToUniversalTime(),
+                    v => DateTime.SpecifyKind(v, DateTimeKind.Utc));
+        });
+
         builder.OwnsOne(p => p.SpeciesBreed, sb =>
         {
             sb.Property(s => s.SpeciesId)
@@ -125,7 +129,37 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 .HasColumnName("breed_id");
         });
 
-        builder.Property(p => p.Details)
+        /*
+        builder.Property(p => p.Files)
+            .HasConversion(
+                file => JsonSerializer.Serialize(file, JsonSerializerOptions.Default),
+                json => JsonSerializer.Deserialize<IReadOnlyList<PetFile>>(json, JsonSerializerOptions.Default)!,
+                new ValueComparer<IReadOnlyList<PetFile>>(
+                    (c1, c2) => c1.SequenceEqual(c2),
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                    c => c.ToList()))
+            .HasColumnName("files");
+            */
+        builder.Property(p => p.Files)
+            .HasConversion(
+                files => JsonSerializer.Serialize(files, new JsonSerializerOptions
+                {
+                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                    Converters = { new FilePathJsonConverter() }
+                }),
+                json => JsonSerializer.Deserialize<IReadOnlyList<PetFile>>(json, new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true,
+                    Converters = { new FilePathJsonConverter() }
+                }) ?? new List<PetFile>(),
+                new ValueComparer<IReadOnlyList<PetFile>>(
+                    (c1, c2) => c1.SequenceEqual(c2),
+                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
+                    c => c.ToList()))
+            .HasColumnType("jsonb")
+            .HasColumnName("files");
+
+        builder.Property(p => p.PaymentDetails)
             .HasConversion(
                 details => JsonSerializer.Serialize(details, JsonSerializerOptions.Default),
                 json => JsonSerializer.Deserialize<IReadOnlyList<PaymentDetail>>(json, JsonSerializerOptions.Default)!,
@@ -141,10 +175,41 @@ public class PetConfiguration : IEntityTypeConfiguration<Pet>
                 v => DateTime.SpecifyKind(v, DateTimeKind.Utc))
             .IsRequired(true)
             .HasColumnName("created_at");
-        
-        /*builder.Property<bool>("_isDeleted")
+
+        builder.Property<bool>("_isDeleted")
             .UsePropertyAccessMode(PropertyAccessMode.Field)
-            .HasColumnName("is_deleted");*/
-   
+            .HasColumnName("is_deleted");
+    }
+}
+
+
+public class FilePathJsonConverter : JsonConverter<FilePath>
+{
+    public override FilePath Read(
+        ref Utf8JsonReader reader,
+        Type typeToConvert,
+        JsonSerializerOptions options)
+    {
+        var path = reader.GetString();
+        if (string.IsNullOrEmpty(path))
+            throw new JsonException("FilePath cannot be null or empty");
+
+        var parts = path.Split('.');
+        if (parts.Length != 2)
+            throw new JsonException("Invalid FilePath format");
+
+        var result = FilePath.Create(Guid.Parse(parts[0]), parts[1]);
+        if (result.IsFailure)
+            throw new JsonException(result.Error.Message);
+
+        return result.Value;
+    }
+
+    public override void Write(
+        Utf8JsonWriter writer,
+        FilePath value,
+        JsonSerializerOptions options)
+    {
+        writer.WriteStringValue(value.Path);
     }
 }

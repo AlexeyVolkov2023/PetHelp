@@ -13,14 +13,11 @@ public class Email : ComparableValueObject
 
     public string Value { get; }
 
-
     public static Result<Email, Error> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value) || !Regex.IsMatch(value, Constants.EMAIL_REGEX))
-        {
-            return Errors.General.ValueIsInvalid("Email");
-        }
-        
+            return Errors.General.ValueIsInvalid("email");
+
         return new Email(value);
     }
 

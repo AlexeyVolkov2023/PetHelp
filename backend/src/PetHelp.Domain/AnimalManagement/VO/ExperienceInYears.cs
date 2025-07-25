@@ -14,9 +14,7 @@ public class ExperienceInYears : ComparableValueObject
     public static Result<ExperienceInYears, Error> Create(int value)
     {
         if (value is > Constants.EXPERIENCE_YEARS_MAX_VALUE or < 0)
-        {
-            return Errors.General.ValueIsInvalid("Experience Years");
-        }
+            return Errors.General.ValueIsInvalid("experience in years");
 
         return new ExperienceInYears(value);
     }

@@ -12,27 +12,25 @@ public class PetStatus : ComparableValueObject
     private static readonly PetStatus[] _all = [NeedsHelp, LookingForHome, FoundHome];
 
 
-    private PetStatus(string value)
+    private PetStatus(string status)
     {
-        Value = value;
+        Status = status;
     }
 
-    public string? Value { get; }
+    public string Status { get; }
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
     {
-        yield return Value;
+        yield return Status;
     }
 
-    public static Result<PetStatus, Error> Create(string value)
+    public static Result<PetStatus, Error> Create(string status)
     {
-        if (string.IsNullOrWhiteSpace(value))
-        {
-            return Errors.General.ValueIsInvalid("Value");
-        }
+        if (string.IsNullOrWhiteSpace(status))
+            return Errors.General.ValueIsInvalid("pet status");
 
-        var petStatus = new PetStatus(value);
+        var petStatus = new PetStatus(status);
 
-        return new PetStatus(value);
+        return new PetStatus(status);
     }
 }

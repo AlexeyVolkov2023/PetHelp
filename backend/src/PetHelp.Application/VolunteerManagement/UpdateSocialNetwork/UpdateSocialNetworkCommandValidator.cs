@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using PetHelp.Application.Dtos;
+using PetHelp.Application.Dto;
 using PetHelp.Application.Validations;
 using PetHelp.Domain.Shared;
 
