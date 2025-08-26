@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using PetHelp.Application.Dto;
+using PetHelp.Application.Dto.Validations;
 using PetHelp.Application.Validations;
 using PetHelp.Domain.AnimalManagement.VO;
 using PetHelp.Domain.Shared;

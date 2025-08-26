@@ -47,7 +47,7 @@ public class CreateHandler
        
         var description = Description.Create(command.Description).Value;
 
-        var expirienceInYears = ExperienceInYears.Create(command.ExperienceInYears).Value;
+        var experienceInYears = ExperienceInYears.Create(command.ExperienceInYears).Value;
         
         var detailsResult = command.PaymentDetails?
             .Select(d => PaymentDetail.Create(d.Title, d.Description).Value)
@@ -69,7 +69,7 @@ public class CreateHandler
             fullName,
             email,
             description,
-            expirienceInYears,
+            experienceInYears,
             phoneNumber,
             detailsResult,
             networksResult);

@@ -2,6 +2,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using PetHelp.API.Controllers.Volunteer.Requests;
 using PetHelp.API.Extensions;
+using PetHelp.API.Proccesors;
 using PetHelp.Application.Dto;
 using PetHelp.Application.VolunteerManagement.AddPet;
 using PetHelp.Application.VolunteerManagement.Create;
@@ -12,6 +13,7 @@ using PetHelp.Application.VolunteerManagement.RemoveFile;
 using PetHelp.Application.VolunteerManagement.UpdateMainInfo;
 using PetHelp.Application.VolunteerManagement.UpdatePaymentDetail;
 using PetHelp.Application.VolunteerManagement.UpdateSocialNetwork;
+using PetHelp.Application.VolunteerManagement.UploadFilesToPet;
 
 
 namespace PetHelp.API.Controllers.Volunteer;
@@ -126,44 +128,46 @@ public class VolunteerController : ApplicationController
         [FromServices] AddPetHandler handler,
         CancellationToken cancellationToken = default)
     {
-        List<CreateFileDto> filesDto = [];
-        
-        try
-        {
-            foreach (var file in request.Files)
-            {
-                var stream = file.OpenReadStream();
-                filesDto.Add(new CreateFileDto(stream,file.FileName, file.ContentType));
-            }
-            
-            var command = new AddPetCommand(
-                id,
-                request.PetInfoDto,
-                request.PetDataDto,
-                request.AddressDto,
-                request.PhoneNumber,
-                request.Status,
-                request.DateOfBirth,
-                request.SpeciesId,
-                request.BreedId,
-                filesDto,
-                request.PaymentDetails);
+        var command = new AddPetCommand(
+            id,
+            request.PetInfoDto,
+            request.PetDataDto,
+            request.AddressDto,
+            request.PhoneNumber,
+            request.Status,
+            request.DateOfBirth,
+            request.SpeciesId,
+            request.BreedId,
+            request.PaymentDetails);
 
-            var result = await handler.Handle(command, cancellationToken);
-            if (result.IsFailure)
-                return result.Error.ToResponse();
+        var result = await handler.Handle(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
 
-            return Ok(result.Value);
-        }
-        finally
-        {
-            foreach (var fileDto in filesDto)
-            {
-                await fileDto.Content.DisposeAsync();
-            }
-        }
+        return Ok(result.Value);
     }
-    
+
+    [HttpPost("{id:guid}/pet/{petId:guid}/files")]
+    public async Task<ActionResult> UploadFilesToPet(
+        [FromRoute] Guid id,
+        [FromRoute] Guid petId,
+        [FromForm] IFormFileCollection files,
+        [FromServices] UploadFilesToPetHandler handler,
+        CancellationToken cancellationToken)
+    {
+        await using var fileProcessor = new FormFileProcessor();
+
+        var fileDtos = fileProcessor.Process(files);
+
+        var command = new UploadFilesToPetCommand(id, petId, fileDtos);
+
+        var result = await handler.Handle(command, cancellationToken);
+        if (result.IsFailure)
+            return result.Error.ToResponse();
+
+        return Ok(result.Value);
+    }
+
     [HttpGet("files/{bucketName}/{objectName}/url")]
     public async Task<ActionResult> GetFileUrl(
         [FromRoute] string bucketName,
@@ -181,7 +185,7 @@ public class VolunteerController : ApplicationController
 
         return Ok(result.Value);
     }
-    
+
     [HttpDelete("files/{bucketName}/{objectPath}")]
     public async Task<IActionResult> RemoveFile(
         [FromRoute] string bucketName,
@@ -192,12 +196,12 @@ public class VolunteerController : ApplicationController
         var command = new RemoveFileCommand(
             bucketName,
             objectPath);
-        
+
         var result = await handler.Handle(command, cancellationToken);
-    
+
         if (result.IsFailure)
             return result.Error.ToResponse();
-    
+
         return Ok(objectPath);
     }
 }

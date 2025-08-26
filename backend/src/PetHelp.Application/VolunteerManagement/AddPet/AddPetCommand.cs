@@ -12,5 +12,4 @@ public record AddPetCommand(
     DateTime DateOfBirth,
     Guid SpeciesId,
     Guid BreedId,
-    IEnumerable<CreateFileDto> Files,
     IEnumerable<PaymentDetailDto> PaymentDetails);

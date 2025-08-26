@@ -1,9 +1,8 @@
 ﻿using CSharpFunctionalExtensions;
-using PetHelp.Application.FileProvider;
 using PetHelp.Domain.AnimalManagement.VO;
 using PetHelp.Domain.Shared;
 
-namespace PetHelp.Application.Providers;
+namespace PetHelp.Application.FileProvider;
 
 public interface IFileProvider
 {

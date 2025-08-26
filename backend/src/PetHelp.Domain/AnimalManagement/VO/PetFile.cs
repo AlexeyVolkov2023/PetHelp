@@ -4,6 +4,7 @@ namespace PetHelp.Domain.AnimalManagement.VO;
 
 public class PetFile : ComparableValueObject
 {
+    public PetFile() {}
     public PetFile(FilePath pathToStorage)
     {
         PathToStorage = pathToStorage;
