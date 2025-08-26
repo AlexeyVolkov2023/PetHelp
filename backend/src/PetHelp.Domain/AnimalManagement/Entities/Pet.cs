@@ -1,4 +1,5 @@
-﻿using CSharpFunctionalExtensions;
+﻿using System.Runtime.CompilerServices;
+using CSharpFunctionalExtensions;
 using PetHelp.Domain.AnimalManagement.AggregateRoot;
 using PetHelp.Domain.AnimalManagement.ID;
 using PetHelp.Domain.AnimalManagement.VO;
@@ -25,8 +26,8 @@ public class Pet : Entity<PetId>, ISoftDeletable
         PetStatus status,
         DateOfBirth dateOfBirth,
         PetSpeciesBreed speciesBreed,
-        IEnumerable<PetFile>? files ,
-        IEnumerable<PaymentDetail>? details ) : base(id)
+        IEnumerable<PetFile>? files,
+        IEnumerable<PaymentDetail>? details) : base(id)
     {
         PetInfo = petInfo;
         PetData = petData;
@@ -35,7 +36,7 @@ public class Pet : Entity<PetId>, ISoftDeletable
         Status = status;
         DateOfBirth = dateOfBirth;
         SpeciesBreed = speciesBreed;
-        Files = files?.ToList() ?? [];
+        Files = files?.ToList().AsReadOnly() ?? new List<PetFile>().AsReadOnly();
         PaymentDetails = details?.ToList() ?? [];
         CreatedAt = DateTime.UtcNow;
     }
@@ -50,35 +51,8 @@ public class Pet : Entity<PetId>, ISoftDeletable
     public DateTime CreatedAt { get; private set; }
     public PetSpeciesBreed SpeciesBreed { get; private set; }
     public IReadOnlyList<PetFile> Files { get; private set; }
+    public Position Position { get; private set; }
 
-    public static Result<Pet, Error> Create(
-        PetId id,
-        PetInfo petInfo,
-        PetData petData,
-        Address address,
-        PhoneNumber phoneNumber,
-        PetStatus petStatus,
-        DateOfBirth dateOfBirth,
-        PetSpeciesBreed speciesBreed,
-        IEnumerable<PetFile>? files,
-        IEnumerable<PaymentDetail>? details)
-    {
-        
-        
-
-        return new Pet(
-            id,
-            petInfo,
-            petData,
-            address,
-            phoneNumber,
-            petStatus,
-            dateOfBirth,
-            speciesBreed,
-            files,
-            details);
-    }
-    
     public void SoftDelete()
     {
         if (_isDeleted == false)
@@ -90,4 +64,37 @@ public class Pet : Entity<PetId>, ISoftDeletable
         if (_isDeleted)
             _isDeleted = false;
     }
+
+    public void UpdateFiles(List<PetFile> files)
+    {
+        Files = files;
+    }
+
+    public void SetPosition(Position position) =>
+        Position = position;
+
+    public UnitResult<Error> MoveForward()
+    {
+        var newPosition = Position.Forward();
+        if (newPosition.IsFailure)
+            return newPosition.Error;
+
+        Position = newPosition.Value;
+
+        return Result.Success<Error>();
+    }
+
+    public UnitResult<Error> MoveBack()
+    {
+        var newPosition = Position.Back();
+        if (newPosition.IsFailure)
+            return newPosition.Error;
+
+        Position = newPosition.Value;
+
+        return Result.Success<Error>();
+    }
+
+    public void Move(Position newPosition) =>
+        Position = newPosition;
 }

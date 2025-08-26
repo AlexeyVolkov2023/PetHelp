@@ -1,17 +1,19 @@
 ﻿using PetHelp.Application.Dto;
+using PetHelp.Application.VolunteerManagement.UploadFilesToPet;
 
 namespace PetHelp.API.Proccesors;
 
+//класс использующий интерфейс IAsyncDisposable для того чтобы освобождать поток
 public class FormFileProcessor : IAsyncDisposable
 {
-    private readonly List<CreateFileDto> _fileDtos = [];
+    private readonly List<UploadFileDto> _fileDtos = [];
 
-    public List<CreateFileDto> Process(IFormFileCollection files)
+    public List<UploadFileDto> Process(IFormFileCollection files)
     {
         foreach (var file in files)
         {
             var stream = file.OpenReadStream();
-            var fileDto = new CreateFileDto(stream, file.FileName, file.ContentType);
+            var fileDto = new UploadFileDto(stream, file.FileName, file.ContentType);
             _fileDtos.Add(fileDto);
         }
 

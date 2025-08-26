@@ -2,7 +2,7 @@
 using PetHelp.Application.Validations;
 using PetHelp.Domain.AnimalManagement.VO;
 
-namespace PetHelp.Application.Dto;
+namespace PetHelp.Application.Dto.Validations;
 
 public class FullNameDtoValidator : AbstractValidator<FullNameDto>
 {

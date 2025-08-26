@@ -8,7 +8,7 @@ public class SoftDeleteCommandValidator : AbstractValidator<SoftDeleteCommand>
 {
     public SoftDeleteCommandValidator()
     {
-        RuleFor(d => d.VolunteerId)
+        RuleFor(s => s.VolunteerId)
             .NotEmpty()
             .WithError(Errors.General.ValueIsRequired());
     }

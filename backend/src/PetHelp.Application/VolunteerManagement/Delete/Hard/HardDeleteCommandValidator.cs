@@ -8,7 +8,7 @@ public class HardDeleteRequestValidator : AbstractValidator<HardDeleteCommand>
 {
     public HardDeleteRequestValidator()
     {
-        RuleFor(d => d.VolunteerId)
+        RuleFor(h => h.VolunteerId)
             .NotEmpty()
             .WithError(Errors.General.ValueIsRequired());
     }

@@ -13,8 +13,8 @@ using PetHelp.Infrastructure;
 namespace PetHelp.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250708151646_Initia")]
-    partial class Initia
+    [Migration("20250823121654_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -255,6 +255,15 @@ namespace PetHelp.Infrastructure.Migrations
                                 .HasMaxLength(20)
                                 .HasColumnType("character varying(20)")
                                 .HasColumnName("owner_phone_number");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Position", "PetHelp.Domain.AnimalManagement.Entities.Pet.Position#Position", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("integer")
+                                .HasColumnName("position");
                         });
 
                     b.ComplexProperty<Dictionary<string, object>>("Status", "PetHelp.Domain.AnimalManagement.Entities.Pet.Status#PetStatus", b1 =>

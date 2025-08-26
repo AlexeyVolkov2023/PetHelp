@@ -13,17 +13,6 @@ namespace PetHelp.Infrastructure.Repositories;
 public class VolunteersRepository(
     IApplicationDbContext dbContext) : IVolunteersRepository
 {
-    /*public async Task<Guid> Add(
-        Volunteer volunteer,
-        CancellationToken cancellationToken = default)
-    {
-        await dbContext.Volunteers.AddAsync(volunteer, cancellationToken);
-
-        await dbContext.SaveChangesAsync(cancellationToken);
-
-        return volunteer.Id;
-    }*/
-    
     public async Task<Result<Volunteer, Error>> GetById(
         VolunteerId volunteerId,
         CancellationToken cancellationToken = default)
@@ -50,29 +39,4 @@ public class VolunteersRepository(
 
         return volunteer;
     }
-    /*public Guid Save(
-        Volunteer volunteer,
-        CancellationToken cancellationToken = default)
-    {
-        dbContext.Volunteers.Attach(volunteer);
-        
-        return volunteer.Id;
-    }
-    
-    public Guid SoftDelete(
-        Volunteer volunteer,
-        CancellationToken cancellationToken = default)
-    {
-        return volunteer.Id;
-    }
-    
-    public Guid HardDelete(
-        Volunteer volunteer,
-        CancellationToken cancellationToken = default)
-    {
-        dbContext.Volunteers.Remove(volunteer);
-        
-        return volunteer.Id;
-    }*/
-    
 }

@@ -85,6 +85,7 @@ namespace PetHelp.Infrastructure.Migrations
                     description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     owner_phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
+                    position = table.Column<int>(type: "integer", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>

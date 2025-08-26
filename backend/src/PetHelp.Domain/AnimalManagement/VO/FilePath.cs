@@ -5,6 +5,7 @@ namespace PetHelp.Domain.AnimalManagement.VO;
 
 public class FilePath : ComparableValueObject
 {
+    private FilePath() {}
     private FilePath(string path)
     {
         Path = path;
@@ -20,7 +21,7 @@ public class FilePath : ComparableValueObject
         if (string.IsNullOrWhiteSpace(extensions))
             return Errors.General.ValueIsInvalid("extensions");
 
-        var fullPath = path + "." + extensions;
+        var fullPath = path +  extensions;
 
         return new FilePath(fullPath);
     }

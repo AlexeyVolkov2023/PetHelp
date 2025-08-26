@@ -254,6 +254,15 @@ namespace PetHelp.Infrastructure.Migrations
                                 .HasColumnName("owner_phone_number");
                         });
 
+                    b.ComplexProperty<Dictionary<string, object>>("Position", "PetHelp.Domain.AnimalManagement.Entities.Pet.Position#Position", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<int>("Value")
+                                .HasColumnType("integer")
+                                .HasColumnName("position");
+                        });
+
                     b.ComplexProperty<Dictionary<string, object>>("Status", "PetHelp.Domain.AnimalManagement.Entities.Pet.Status#PetStatus", b1 =>
                         {
                             b1.IsRequired();

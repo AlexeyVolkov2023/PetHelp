@@ -11,5 +11,4 @@ public record AddPetRequest(
     DateTime DateOfBirth,
     Guid SpeciesId,
     Guid BreedId,
-    IFormFileCollection Files,
     IEnumerable<PaymentDetailDto> PaymentDetails);

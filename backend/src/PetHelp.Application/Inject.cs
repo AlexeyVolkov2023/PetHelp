@@ -9,6 +9,7 @@ using PetHelp.Application.VolunteerManagement.RemoveFile;
 using PetHelp.Application.VolunteerManagement.UpdateMainInfo;
 using PetHelp.Application.VolunteerManagement.UpdatePaymentDetail;
 using PetHelp.Application.VolunteerManagement.UpdateSocialNetwork;
+using PetHelp.Application.VolunteerManagement.UploadFilesToPet;
 
 
 namespace PetHelp.Application;
@@ -26,6 +27,7 @@ public static class Inject
         services.AddScoped<AddPetHandler>();
         services.AddScoped<GetPresignedUrlHandler>();
         services.AddScoped<RemoveFileHandler>();
+        services.AddScoped<UploadFilesToPetHandler>();
         
 
         services.AddValidatorsFromAssembly(typeof(Inject).Assembly);
