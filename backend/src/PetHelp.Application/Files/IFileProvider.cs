@@ -16,8 +16,13 @@ public interface IFileProvider
         int expiryInSeconds,
         CancellationToken cancellationToken = default);
     
-    Task<Result<string, Error>> RemoveFile(
+    Task<UnitResult<Error>> RemoveFile(
         string bucketName,
         string objectPath,
         CancellationToken cancellationToken = default);
+    
+    Task<UnitResult<Error>> RemoveFile(
+        FileInfo fileInfo,
+        CancellationToken cancellationToken = default);
+   
 }

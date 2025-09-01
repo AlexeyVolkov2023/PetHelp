@@ -22,7 +22,7 @@ public class RemoveFileHandler
         _validator = validator;
     }
 
-    public async Task<Result<string, ErrorList>> Handle(
+    public async Task<UnitResult<ErrorList>> Handle(
         RemoveFileCommand command,
         CancellationToken cancellationToken)
     {
@@ -42,6 +42,6 @@ public class RemoveFileHandler
         
         _logger.LogInformation("Remove object with {ObjectName}", command.ObjectName);
 
-        return result.Value;
+        return UnitResult.Success<ErrorList>();
     }
 }
