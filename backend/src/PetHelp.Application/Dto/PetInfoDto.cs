@@ -1,5 +1,7 @@
 ﻿namespace PetHelp.Application.Dto;
 
-public record PetInfoDto(
-    string Name,
-    string Description);
+public class PetInfoDto
+{
+    public string Name { get; init; } = String.Empty;
+    public string Description { get; init; } = String.Empty;
+}

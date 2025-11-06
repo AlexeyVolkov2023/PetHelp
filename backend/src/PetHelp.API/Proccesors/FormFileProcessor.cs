@@ -1,5 +1,4 @@
 ﻿using PetHelp.Application.Dto;
-using PetHelp.Application.VolunteerManagement.UploadFilesToPet;
 
 namespace PetHelp.API.Proccesors;
 

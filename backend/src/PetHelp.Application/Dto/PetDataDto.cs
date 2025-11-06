@@ -1,9 +1,11 @@
 ﻿namespace PetHelp.Application.Dto;
 
-public record PetDataDto(
-    string Color,
-    string HealthInfo,
-    double Weight,
-    double Height,
-    bool IsNeutered,
-    bool IsVaccinated);
+public class PetDataDto
+{
+    public string Color { get; init; } = String.Empty;
+    public string HealthInfo { get; init; } = String.Empty;
+    public double Weight { get; init; }
+    public double Height { get; init; }
+    public bool IsNeutered { get; init; }
+    public bool IsVaccinated{ get; init; }
+}

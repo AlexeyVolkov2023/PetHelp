@@ -1,6 +1,6 @@
 ﻿using System.Threading.Channels;
 using PetHelp.Application.Messaging;
-using FileInfo = PetHelp.Application.FileProvider.FileInfo;
+using FileInfo = PetHelp.Application.Files.FileInfo;
 
 namespace PetHelp.Infrastructure.MessagesQueues;
 

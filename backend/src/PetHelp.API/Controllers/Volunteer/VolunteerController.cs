@@ -3,17 +3,20 @@ using Microsoft.AspNetCore.Mvc;
 using PetHelp.API.Controllers.Volunteer.Requests;
 using PetHelp.API.Extensions;
 using PetHelp.API.Proccesors;
+using PetHelp.Application.Abstraction;
 using PetHelp.Application.Dto;
-using PetHelp.Application.VolunteerManagement.AddPet;
-using PetHelp.Application.VolunteerManagement.Create;
-using PetHelp.Application.VolunteerManagement.Delete.Hard;
-using PetHelp.Application.VolunteerManagement.Delete.Soft;
-using PetHelp.Application.VolunteerManagement.GetPresignedUrl;
-using PetHelp.Application.VolunteerManagement.RemoveFile;
-using PetHelp.Application.VolunteerManagement.UpdateMainInfo;
-using PetHelp.Application.VolunteerManagement.UpdatePaymentDetail;
-using PetHelp.Application.VolunteerManagement.UpdateSocialNetwork;
-using PetHelp.Application.VolunteerManagement.UploadFilesToPet;
+using PetHelp.Application.PetManagement.Commands.AddPet;
+using PetHelp.Application.PetManagement.Commands.Create;
+using PetHelp.Application.PetManagement.Commands.Delete.Hard;
+using PetHelp.Application.PetManagement.Commands.Delete.Soft;
+using PetHelp.Application.PetManagement.Commands.GetPresignedUrl;
+using PetHelp.Application.PetManagement.Commands.RemoveFile;
+using PetHelp.Application.PetManagement.Commands.UpdateMainInfo;
+using PetHelp.Application.PetManagement.Commands.UpdatePaymentDetail;
+using PetHelp.Application.PetManagement.Commands.UpdateSocialNetwork;
+using PetHelp.Application.PetManagement.Commands.UploadFilesToPet;
+using PetHelp.Application.PetManagement.Queries.GetPetsWithPagination;
+using PetHelp.Application.PetManagement.Queries.GetVolunteersWithPaginationQuery;
 
 
 namespace PetHelp.API.Controllers.Volunteer;
@@ -22,7 +25,7 @@ public class VolunteerController : ApplicationController
 {
     [HttpPost]
     public async Task<IActionResult> Create(
-        [FromServices] CreateHandler handler,
+        [FromServices] ICommandHandler<Guid, CreateCommand> handler,
         [FromBody] CreateRequest request,
         CancellationToken cancellationToken = default)
     {
@@ -124,7 +127,7 @@ public class VolunteerController : ApplicationController
     [HttpPost("{id:guid}/pet")]
     public async Task<ActionResult> AddPet(
         [FromRoute] Guid id,
-        [FromForm] AddPetRequest request,
+        [FromBody] AddPetRequest request,
         [FromServices] AddPetHandler handler,
         CancellationToken cancellationToken = default)
     {
@@ -203,5 +206,18 @@ public class VolunteerController : ApplicationController
             return result.Error.ToResponse();
 
         return Ok(objectPath);
+    }
+    
+    [HttpGet]
+    public async Task<ActionResult> Get(
+        [FromQuery] GetVolunteersWithPaginationRequest request,
+        [FromServices] GetVolunteersWithPaginationHandler handler,
+        CancellationToken cancellationToken = default)
+    {
+        var query = request.ToQuery();
+
+        var responce = await handler.Handle(query, cancellationToken);
+
+        return Ok(responce);
     }
 }

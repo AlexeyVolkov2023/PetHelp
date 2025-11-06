@@ -4,10 +4,10 @@ using Minio;
 using Minio.DataModel;
 using Minio.DataModel.Args;
 using Minio.Exceptions;
-using PetHelp.Application.FileProvider;
+using PetHelp.Application.Files;
 using PetHelp.Domain.AnimalManagement.VO;
 using PetHelp.Domain.Shared;
-using FileInfo = PetHelp.Application.FileProvider.FileInfo;
+using FileInfo = PetHelp.Application.Files.FileInfo;
 
 namespace PetHelp.Infrastructure.Providers;
 

@@ -3,14 +3,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using PetHelp.Domain.AnimalManagement.AggregateRoot;
-using PetHelp.Domain.SpeciesManagement.AgregateRoot;
+using PetHelp.Domain.SpeciesManagement.AggregateRoot;
 
 namespace PetHelp.Application.Database;
 
 public interface IApplicationDbContext
 {
     DbSet<Volunteer> Volunteers { get; }
-    DbSet<Species> Specieses { get; }
+    DbSet<Species> Species { get; }
     
     DatabaseFacade Database { get; }
 

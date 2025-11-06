@@ -2,16 +2,17 @@
 using Microsoft.Extensions.DependencyInjection;
 using Minio;
 using PetHelp.Application.Database;
-using PetHelp.Application.FileProvider;
 using PetHelp.Application.Files;
 using PetHelp.Application.Messaging;
-using PetHelp.Application.VolunteerManagement;
+using PetHelp.Application.PetManagement;
 using PetHelp.Infrastructure.BackgroundServices;
+using PetHelp.Infrastructure.DbContexts;
+using PetHelp.Infrastructure.Files;
 using PetHelp.Infrastructure.MessagesQueues;
 using PetHelp.Infrastructure.Options;
 using PetHelp.Infrastructure.Providers;
 using PetHelp.Infrastructure.Repositories;
-using FileInfo = PetHelp.Application.FileProvider.FileInfo;
+using FileInfo = PetHelp.Application.Files.FileInfo;
 
 namespace PetHelp.Infrastructure;
 
@@ -21,14 +22,13 @@ public static class Inject
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        services.AddScoped<IVolunteersRepository, VolunteersRepository>();
-        services.AddScoped<IApplicationDbContext, ApplicationDbContext>();
-        services.AddMinio(configuration);
-
-        services.AddHostedService<FilesCleanerBackgroundServices>();
-
-        services.AddSingleton<IMessageQueue<IEnumerable<FileInfo>>, InMemoryMessageQueue<IEnumerable<FileInfo>>>();
-        services.AddScoped<IFilesCleanerService, FilesCleanerService>();
+        services
+            .AddDbContext()
+            .AddMinio(configuration)
+            .AddRepository()
+            .AddHostedServices()
+            .AddMessageQueque()
+            .AddServices();
 
         return services;
     }
@@ -53,6 +53,41 @@ public static class Inject
         });
 
         services.AddScoped<IFileProvider, MinioProvider>();
+
+        return services;
+    }
+    
+    private static IServiceCollection AddDbContext(this IServiceCollection services)
+    {
+        services.AddScoped<IApplicationDbContext, WriteDbContext>();
+        services.AddScoped<IReadDbContext, ReadDbContext>();
+
+        return services;
+    } 
+    
+    private static IServiceCollection AddRepository(this IServiceCollection services)
+    {
+        services.AddScoped<IVolunteersRepository, VolunteersRepository>();
+
+        return services;
+    }
+    
+    private static IServiceCollection AddHostedServices(this IServiceCollection services)
+    {
+        services.AddHostedService<FilesCleanerBackgroundServices>();
+
+        return services;
+    }
+    
+    private static IServiceCollection AddMessageQueque(this IServiceCollection services)
+    {
+        services.AddSingleton<IMessageQueue<IEnumerable<FileInfo>>, InMemoryMessageQueue<IEnumerable<FileInfo>>>();
+
+        return services;
+    }
+    private static IServiceCollection AddServices(this IServiceCollection services)
+    {
+        services.AddScoped<IFilesCleanerService, FilesCleanerService>();
 
         return services;
     }

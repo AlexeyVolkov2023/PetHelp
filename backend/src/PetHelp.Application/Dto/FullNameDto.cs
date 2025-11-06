@@ -1,6 +1,8 @@
 ﻿namespace PetHelp.Application.Dto;
 
-public record FullNameDto(
-    string Name,
-    string Surname,
-    string? Patronymic);
+public class FullNameDto
+{
+    public string Name { get; init; } = String.Empty;
+    public string Surname { get; init; } = String.Empty;
+    public string? Patronymic { get; init; } = String.Empty;
+}

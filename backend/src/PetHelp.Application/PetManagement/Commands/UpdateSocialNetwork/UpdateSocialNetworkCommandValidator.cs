@@ -1,0 +1,18 @@
+﻿using FluentValidation;
+using PetHelp.Application.Dto.Validations;
+using PetHelp.Application.Validations;
+using PetHelp.Domain.Shared;
+
+namespace PetHelp.Application.PetManagement.Commands.UpdateSocialNetwork;
+
+public class UpdateSocialNetworkCommandValidator :AbstractValidator<UpdateSocialNetworkCommand>
+{
+    public UpdateSocialNetworkCommandValidator()
+    {
+        RuleFor(u => u.VolunteerId)
+            .NotEmpty()
+            .WithError(Errors.General.ValueIsRequired());
+        RuleForEach(c => c.SocialNetwork)
+            .SetValidator(new SocialNetworkDtoValidator());
+    }
+}
