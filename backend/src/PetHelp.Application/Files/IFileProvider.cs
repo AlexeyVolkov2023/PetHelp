@@ -2,7 +2,7 @@
 using PetHelp.Domain.AnimalManagement.VO;
 using PetHelp.Domain.Shared;
 
-namespace PetHelp.Application.FileProvider;
+namespace PetHelp.Application.Files;
 
 public interface IFileProvider
 {

@@ -25,6 +25,14 @@ public class FilePath : ComparableValueObject
 
         return new FilePath(fullPath);
     }
+    
+    public static Result<FilePath, Error> Create(string fullPath)
+    {
+        if (string.IsNullOrWhiteSpace(fullPath))
+            return Errors.General.ValueIsInvalid("fullPath"); 
+
+        return new FilePath(fullPath);
+    }
 
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
     {

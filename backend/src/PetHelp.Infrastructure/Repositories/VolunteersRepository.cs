@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PetHelp.Application;
 using PetHelp.Application.Database;
-using PetHelp.Application.VolunteerManagement;
+using PetHelp.Application.PetManagement;
 using PetHelp.Domain.AnimalManagement.AggregateRoot;
 using PetHelp.Domain.AnimalManagement.ID;
 using PetHelp.Domain.Shared;
@@ -22,7 +22,6 @@ public class VolunteersRepository(
             .FirstOrDefaultAsync(v => v.Id == volunteerId, cancellationToken);
         if (volunteer is null)
             return Errors.General.NotFound(volunteerId);
-        
 
         return volunteer;
     }
@@ -38,5 +37,5 @@ public class VolunteersRepository(
             return Errors.General.NotFound();
 
         return volunteer;
-    }
+    } 
 }

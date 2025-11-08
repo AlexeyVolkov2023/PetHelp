@@ -22,16 +22,16 @@ public class FilesCleanerBackgroundServices : BackgroundService
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("FilesCLeanerBackgroundServices is starting.");
-        
-        await using var scope = _scopeFactory.CreateAsyncScope();
-        
-        var filesCleanerService = scope.ServiceProvider.GetRequiredService<IFilesCleanerService>();
-        
+
         while (!stoppingToken.IsCancellationRequested)
         {
+            await using var scope = _scopeFactory.CreateAsyncScope();
+
+            var filesCleanerService = scope.ServiceProvider.GetRequiredService<IFilesCleanerService>();
+
             await filesCleanerService.Process(stoppingToken);
         }
-        
+
         await Task.CompletedTask;
     }
 }

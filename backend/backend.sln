@@ -18,8 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetHelp.Domain.Test", "test\PetHelp.Domain.Test\PetHelp.Domain.Test.csproj", "{FADDD196-5156-43CC-8892-3DA9D4C56171}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PetHelp.Application.Test", "test\PetHelp.Application.Test\PetHelp.Application.Test.csproj", "{13074341-F3F7-4015-BDC8-F3F796C34DD5}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -49,9 +47,5 @@ Global
 		{FADDD196-5156-43CC-8892-3DA9D4C56171}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FADDD196-5156-43CC-8892-3DA9D4C56171}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FADDD196-5156-43CC-8892-3DA9D4C56171}.Release|Any CPU.Build.0 = Release|Any CPU
-		{13074341-F3F7-4015-BDC8-F3F796C34DD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{13074341-F3F7-4015-BDC8-F3F796C34DD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{13074341-F3F7-4015-BDC8-F3F796C34DD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{13074341-F3F7-4015-BDC8-F3F796C34DD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
