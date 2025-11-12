@@ -81,13 +81,13 @@ namespace PetHelp.Infrastructure.Migrations
 
                             b1.Property<string>("Name")
                                 .IsRequired()
-                                .HasMaxLength(15)
-                                .HasColumnType("character varying(15)")
+                                .HasMaxLength(40)
+                                .HasColumnType("character varying(40)")
                                 .HasColumnName("name");
 
                             b1.Property<string>("Patronymic")
-                                .HasMaxLength(15)
-                                .HasColumnType("character varying(15)")
+                                .HasMaxLength(40)
+                                .HasColumnType("character varying(40)")
                                 .HasColumnName("patronymic");
 
                             b1.Property<string>("Surname")
@@ -165,8 +165,8 @@ namespace PetHelp.Infrastructure.Migrations
 
                             b1.Property<string>("HouseNumber")
                                 .IsRequired()
-                                .HasMaxLength(6)
-                                .HasColumnType("character varying(6)")
+                                .HasMaxLength(200)
+                                .HasColumnType("character varying(200)")
                                 .HasColumnName("house_number");
 
                             b1.Property<string>("Region")
@@ -197,8 +197,8 @@ namespace PetHelp.Infrastructure.Migrations
 
                             b1.Property<string>("Color")
                                 .IsRequired()
-                                .HasMaxLength(15)
-                                .HasColumnType("character varying(15)")
+                                .HasMaxLength(50)
+                                .HasColumnType("character varying(50)")
                                 .HasColumnName("color");
 
                             b1.Property<string>("HealthInfo")
@@ -238,8 +238,8 @@ namespace PetHelp.Infrastructure.Migrations
 
                             b1.Property<string>("Name")
                                 .IsRequired()
-                                .HasMaxLength(15)
-                                .HasColumnType("character varying(15)")
+                                .HasMaxLength(40)
+                                .HasColumnType("character varying(40)")
                                 .HasColumnName("name");
                         });
 
@@ -288,10 +288,6 @@ namespace PetHelp.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Breeds")
-                        .HasColumnType("text")
-                        .HasColumnName("breeds");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -310,14 +306,21 @@ namespace PetHelp.Infrastructure.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<string>("Name")
+                    b.Property<string>("Title")
                         .IsRequired()
-                        .HasMaxLength(15)
-                        .HasColumnType("character varying(15)")
-                        .HasColumnName("name");
+                        .HasMaxLength(150)
+                        .HasColumnType("character varying(150)")
+                        .HasColumnName("title");
+
+                    b.Property<Guid>("species_id")
+                        .HasColumnType("uuid")
+                        .HasColumnName("species_id");
 
                     b.HasKey("Id")
                         .HasName("pk_breeds");
+
+                    b.HasIndex("species_id")
+                        .HasDatabaseName("ix_breeds_species_id");
 
                     b.ToTable("breeds", (string)null);
                 });
@@ -360,9 +363,26 @@ namespace PetHelp.Infrastructure.Migrations
                     b.Navigation("Volunteer");
                 });
 
+            modelBuilder.Entity("PetHelp.Domain.SpeciesManagement.Entities.Breed", b =>
+                {
+                    b.HasOne("PetHelp.Domain.SpeciesManagement.AggregateRoot.Species", "Species")
+                        .WithMany("Breeds")
+                        .HasForeignKey("species_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_breeds_species_species_id");
+
+                    b.Navigation("Species");
+                });
+
             modelBuilder.Entity("PetHelp.Domain.AnimalManagement.AggregateRoot.Volunteer", b =>
                 {
                     b.Navigation("Pets");
+                });
+
+            modelBuilder.Entity("PetHelp.Domain.SpeciesManagement.AggregateRoot.Species", b =>
+                {
+                    b.Navigation("Breeds");
                 });
 #pragma warning restore 612, 618
         }

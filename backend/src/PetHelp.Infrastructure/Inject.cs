@@ -5,6 +5,7 @@ using PetHelp.Application.Database;
 using PetHelp.Application.Files;
 using PetHelp.Application.Messaging;
 using PetHelp.Application.PetManagement;
+using PetHelp.Application.SpeciesManagement;
 using PetHelp.Infrastructure.BackgroundServices;
 using PetHelp.Infrastructure.DbContexts;
 using PetHelp.Infrastructure.Files;
@@ -68,6 +69,7 @@ public static class Inject
     private static IServiceCollection AddRepository(this IServiceCollection services)
     {
         services.AddScoped<IVolunteersRepository, VolunteersRepository>();
+        services.AddScoped<ISpeciesRepository, SpeciesRepository>();
 
         return services;
     }

@@ -39,4 +39,25 @@ public static class Errors
             return Error.NotFound("file.not_found", $"{objectName} not found");
         }
     }
+    
+    public static class Species
+    {
+        public static ErrorList IsUsed()
+        {
+            return Error.Validation("Is.used", "Species is used");
+        }
+        
+        public static ErrorList NotFound()
+        {
+            return Error.Validation("species.not_found", $"Species not found");
+        }
+    }
+    
+    public static class Breed
+    {
+        public static ErrorList NotFound()
+        {
+            return Error.Validation("breed.not_found", $"Breed not found");
+        }
+    }
 }

@@ -1,6 +1,5 @@
 ﻿using CSharpFunctionalExtensions;
 using Microsoft.EntityFrameworkCore;
-using PetHelp.Application;
 using PetHelp.Application.Database;
 using PetHelp.Application.PetManagement;
 using PetHelp.Domain.AnimalManagement.AggregateRoot;
