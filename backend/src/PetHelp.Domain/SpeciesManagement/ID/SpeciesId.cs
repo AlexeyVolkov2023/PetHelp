@@ -20,7 +20,14 @@ public class SpeciesId : ComparableValueObject
     public static SpeciesId Empty() => new(Guid.Empty);
 
     public static SpeciesId Create(Guid id) => new(id);
-    public static implicit operator Guid(SpeciesId speciesId) => speciesId.Value;
+    public static implicit operator SpeciesId(Guid id) => new SpeciesId(id);
+    
+    public static implicit operator Guid(SpeciesId speciesId)
+    {   
+        ArgumentNullException.ThrowIfNull(speciesId);
+
+        return speciesId.Value;
+    }
     
     protected override IEnumerable<IComparable> GetComparableEqualityComponents()
     {

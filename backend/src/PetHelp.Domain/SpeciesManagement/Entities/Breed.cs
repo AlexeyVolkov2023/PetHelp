@@ -1,26 +1,30 @@
 ﻿using CSharpFunctionalExtensions;
 using PetHelp.Domain.Shared;
+using PetHelp.Domain.SpeciesManagement.AggregateRoot;
 using PetHelp.Domain.SpeciesManagement.ID;
 
 namespace PetHelp.Domain.SpeciesManagement.Entities;
 
 public class Breed : Entity<BreedId>
 {
+    public Species Species { get; private set; } = null!;
     private Breed(
         BreedId id,
-        string name) : base(id)
+        
+        string title) : base(id)
     {
-        Name = name;
+        
+        Title = title;
     }
-    public string Name { get; }
+    public string Title { get; }
     
     public static Result<Breed, Error> Create(
         BreedId id,
-        string name)
+        string title)
     {
-        if (string.IsNullOrWhiteSpace(name))
-            return Errors.General.ValueIsInvalid("name");
+        if (string.IsNullOrWhiteSpace(title))
+            return Errors.General.ValueIsInvalid("title");
         
-        return new Breed(id, name);
+        return new Breed(id, title);
     }
 }

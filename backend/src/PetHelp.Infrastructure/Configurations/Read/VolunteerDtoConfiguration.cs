@@ -48,7 +48,5 @@ public class VolunteerDtoConfiguration : IEntityTypeConfiguration<VolunteerDto> 
                 network => JsonSerializer.Serialize(string.Empty, JsonSerializerOptions.Default),
                 json => JsonSerializer.Deserialize<SocialNetworkDto[]>(json, JsonSerializerOptions.Default)!)
             .HasColumnName("social_networks");
-        
-        
     }
 }

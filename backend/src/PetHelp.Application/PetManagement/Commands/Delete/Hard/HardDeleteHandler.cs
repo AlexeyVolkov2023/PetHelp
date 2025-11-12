@@ -1,5 +1,6 @@
 ﻿using CSharpFunctionalExtensions;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using PetHelp.Application.Abstraction;
 using PetHelp.Application.Database;
@@ -39,6 +40,8 @@ public class HardDeleteHandler : ICommandHandler<Guid, HardDeleteCommand>
         var volunteerResult = await _volunteersRepository.GetById(command.VolunteerId, cancellationToken);
         if (volunteerResult.IsFailure)
             return volunteerResult.Error.ToErrorList();
+        
+        _dbContext.Volunteers.Remove(volunteerResult.Value);
 
         await _dbContext.SaveChangesAsync(cancellationToken);
 

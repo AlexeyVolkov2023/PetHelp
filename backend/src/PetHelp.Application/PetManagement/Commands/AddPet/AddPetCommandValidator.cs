@@ -26,13 +26,15 @@ public class AddPetCommandValidator : AbstractValidator<AddPetCommand>
         RuleFor(a => a.DateOfBirth)
             .NotEmpty()
             .WithError(Errors.General.ValueIsRequired());
-        RuleFor(a => a.SpeciesId)
+        RuleFor(a => a.Species)
             .NotEmpty()
+            .When(x => !string.IsNullOrEmpty(x.Species))
             .WithError(Errors.General.ValueIsRequired());
-        RuleFor(a => a.BreedId)
+        RuleFor(a => a.Breed)
             .NotEmpty()
+            .When(x => !string.IsNullOrEmpty(x.Breed))
             .WithError(Errors.General.ValueIsRequired());
-        //RuleForEach(a => a.PaymentDetails)
-           // .SetValidator(new PaymentDetailDtoValidator());
+        RuleForEach(a => a.PaymentDetails)
+            .SetValidator(new PaymentDetailDtoValidator());
     }
 }

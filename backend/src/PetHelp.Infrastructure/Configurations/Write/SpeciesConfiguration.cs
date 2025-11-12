@@ -2,9 +2,11 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using PetHelp.Application.Dto;
 using PetHelp.Domain.SpeciesManagement.AggregateRoot;
 using PetHelp.Domain.SpeciesManagement.Entities;
 using PetHelp.Domain.SpeciesManagement.ID;
+using PetHelp.Infrastructure.Extensions;
 
 namespace PetHelp.Infrastructure.Configurations.Write;
 
@@ -25,13 +27,10 @@ public class SpeciesConfiguration : IEntityTypeConfiguration<Species>
             .IsRequired()
             .HasMaxLength(Domain.Shared.Constants.TITLE_MAX_LENGTH);
 
-        builder.Property(v => v.Breeds)
-            .HasConversion(
-                breeds => JsonSerializer.Serialize(breeds, JsonSerializerOptions.Default),
-                json => JsonSerializer.Deserialize<IReadOnlyList<Breed>>(json, JsonSerializerOptions.Default)!,
-                new ValueComparer<IReadOnlyList<Breed>>(
-                    (c1, c2) => c1.SequenceEqual(c2),
-                    c => c.Aggregate(0, (a, v) => HashCode.Combine(a, v.GetHashCode())),
-                    c => c.ToList()));
+        builder.HasMany(v => v.Breeds)
+            .WithOne(p => p.Species)
+            .HasForeignKey("species_id")
+            .OnDelete(DeleteBehavior.Cascade)
+            .IsRequired();
     }
 }
