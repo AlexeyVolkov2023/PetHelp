@@ -11,6 +11,6 @@ public record AddPetCommand(
     string PhoneNumber,
     string Status,
     DateTime DateOfBirth,
-    Guid SpeciesId,
-    Guid BreedId,
+    string Species,
+    string Breed,
     IEnumerable<PaymentDetailDto> PaymentDetails): ICommand;

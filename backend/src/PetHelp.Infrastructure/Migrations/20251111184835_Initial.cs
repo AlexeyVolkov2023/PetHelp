@@ -12,24 +12,11 @@ namespace PetHelp.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "breeds",
-                columns: table => new
-                {
-                    id = table.Column<Guid>(type: "uuid", nullable: false),
-                    name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("pk_breeds", x => x.id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "species",
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    title = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false),
-                    breeds = table.Column<string>(type: "text", nullable: true)
+                    title = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -47,14 +34,33 @@ namespace PetHelp.Infrastructure.Migrations
                     description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
                     email = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     experience_in_years = table.Column<int>(type: "integer", maxLength: 100, nullable: false),
-                    name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
-                    patronymic = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: true),
+                    name = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
+                    patronymic = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: true),
                     surname = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
                     phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("pk_volunteers", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "breeds",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    species_id = table.Column<Guid>(type: "uuid", nullable: false),
+                    title = table.Column<string>(type: "character varying(150)", maxLength: 150, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_breeds", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_breeds_species_species_id",
+                        column: x => x.species_id,
+                        principalTable: "species",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -72,18 +78,18 @@ namespace PetHelp.Infrastructure.Migrations
                     apartment = table.Column<int>(type: "integer", maxLength: 1600, nullable: true),
                     city = table.Column<string>(type: "character varying(35)", maxLength: 35, nullable: false),
                     country = table.Column<string>(type: "character varying(35)", maxLength: 35, nullable: false),
-                    house_number = table.Column<string>(type: "character varying(6)", maxLength: 6, nullable: false),
+                    house_number = table.Column<string>(type: "character varying(200)", maxLength: 200, nullable: false),
                     region = table.Column<string>(type: "character varying(35)", maxLength: 35, nullable: false),
                     street = table.Column<string>(type: "character varying(35)", maxLength: 35, nullable: false),
                     date_of_birth = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    color = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    color = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
                     health_info = table.Column<string>(type: "character varying(250)", maxLength: 250, nullable: false),
                     Weight = table.Column<double>(type: "double precision", maxLength: 200, nullable: false),
                     is_neutered = table.Column<bool>(type: "boolean", nullable: false),
                     is_vaccinated = table.Column<bool>(type: "boolean", nullable: false),
                     weight = table.Column<double>(type: "double precision", maxLength: 200, nullable: false),
                     description = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    name = table.Column<string>(type: "character varying(15)", maxLength: 15, nullable: false),
+                    name = table.Column<string>(type: "character varying(40)", maxLength: 40, nullable: false),
                     owner_phone_number = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: false),
                     position = table.Column<int>(type: "integer", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false)
@@ -98,6 +104,11 @@ namespace PetHelp.Infrastructure.Migrations
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "ix_breeds_species_id",
+                table: "breeds",
+                column: "species_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_pets_volunteer_id",

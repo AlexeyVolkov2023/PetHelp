@@ -139,8 +139,8 @@ public class VolunteerController : ApplicationController
             request.PhoneNumber,
             request.Status,
             request.DateOfBirth,
-            request.SpeciesId,
-            request.BreedId,
+            request.Species,
+            request.Breed,
             request.PaymentDetails);
 
         var result = await handler.Handle(command, cancellationToken);

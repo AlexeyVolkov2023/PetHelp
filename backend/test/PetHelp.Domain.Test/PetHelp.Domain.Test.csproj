@@ -30,7 +30,9 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\src\PetHelp.Application\PetHelp.Application.csproj" />
       <ProjectReference Include="..\..\src\PetHelp.Domain\PetHelp.Domain.csproj" />
+      <ProjectReference Include="..\..\src\PetHelp.Infrastructure\PetHelp.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>
